@@ -27,6 +27,18 @@ void loop() {
     y++;
   }
 
+  if (x < 0) {
+    x = SCREEN_WIDTH;
+  } else if (x > SCREEN_WIDTH) {
+    x = 0;
+  }
+
+  if (y < 0) {
+    y = SCREEN_HEIGHT;
+  } else if (y > SCREEN_HEIGHT) {
+    y = 0;
+  }
+
   arduboy.drawRect(x,y,4,4,WHITE);
 
   arduboy.display();
