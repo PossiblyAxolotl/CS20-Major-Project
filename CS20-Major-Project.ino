@@ -5,8 +5,27 @@ Arduboy2 arduboy;
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
 
-int x = SCREEN_WIDTH / 2;
-int y = SCREEN_HEIGHT / 2;
+class Bubble {
+  private:
+    int x = random(0,SCREEN_WIDTH);
+    int y = random(0,SCREEN_HEIGHT);
+    int size = random(2,5);
+    float speed = ((float)random(1, 30)) / 100;
+  public:
+
+    void update() {
+      y -= speed;
+      if (y < 1) {
+        y = SCREEN_HEIGHT;
+      }
+    };
+
+    void draw() {
+      arduboy.drawCircle(x, y, size, WHITE);
+    };
+};
+
+Bubble bubbles[30];
 
 void setup() {
   arduboy.begin();
@@ -15,31 +34,14 @@ void setup() {
 void loop() {
   arduboy.clear();
 
-  if (arduboy.pressed(LEFT_BUTTON)) {
-    x--;
-  } else if (arduboy.pressed(RIGHT_BUTTON)) {
-    x++;
-  }
+  for (int i = 0; i < 30; i ++) {
+    Bubble bub = bubbles[i];
 
-  if (arduboy.pressed(UP_BUTTON)) {
-    y--;
-  } else if (arduboy.pressed(DOWN_BUTTON)) {
-    y++;
-  }
+    bub.update();
+    bub.draw();
 
-  if (x < 0) {
-    x = SCREEN_WIDTH;
-  } else if (x > SCREEN_WIDTH) {
-    x = 0;
+    bubbles[i] = bub;
   }
-
-  if (y < 0) {
-    y = SCREEN_HEIGHT;
-  } else if (y > SCREEN_HEIGHT) {
-    y = 0;
-  }
-
-  arduboy.drawRect(x,y,4,4,WHITE);
 
   arduboy.display();
 }
