@@ -1,3 +1,8 @@
+// PossiblyAxolotl
+// CS20 Final Project - Currently Unsure of End Goal
+// started Oct 24, 2023
+// Last modified Oct 25, 2023
+
 #include <Arduboy2.h>
 
 Arduboy2 arduboy;
