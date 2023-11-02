@@ -3,6 +3,8 @@
 // started Oct 24, 2023
 // Last modified Oct 25, 2023
 
+// 128x64 screen
+
 #include <Arduboy2.h>
 
 Arduboy2 arduboy;
