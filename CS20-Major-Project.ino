@@ -12,8 +12,10 @@ Arduboy2 arduboy;
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
 
-int player_x = SCREEN_WIDTH/2;
-int player_y = SCREEN_HEIGHT/2;
+float player_x = SCREEN_WIDTH/2;
+float player_y = SCREEN_HEIGHT/2;
+
+float move_speed = 0.01;
 
 void setup() {
   arduboy.begin();
@@ -23,17 +25,16 @@ void loop() {
   arduboy.clear();
 
   if (arduboy.pressed(RIGHT_BUTTON)) {
-    player_x += 1;
+    player_x += move_speed;
   } else if (arduboy.pressed(LEFT_BUTTON)) {
-    player_x -= 1;
+    player_x -= move_speed;
   }
 
   if (arduboy.pressed(DOWN_BUTTON)) {
-    player_y += 1;
+    player_y += move_speed;
   } else if (arduboy.pressed(UP_BUTTON)) {
-    player_y -= 1;
+    player_y -= move_speed;
   }
-
 
   arduboy.fillRect(player_x, player_y, 2, 2, WHITE);
 
