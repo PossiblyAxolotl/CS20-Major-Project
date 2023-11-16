@@ -1,7 +1,7 @@
 // PossiblyAxolotl
 // CS20 Final Project - Currently Unsure of End Goal
 // started Oct 24, 2023
-// Last modified Oct 25, 2023
+// Last modified Nov 16, 2023
 
 // 128x64 screen
 
@@ -12,27 +12,8 @@ Arduboy2 arduboy;
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
 
-class Bubble {
-  private:
-    int x = random(0,SCREEN_WIDTH);
-    int y = random(0,SCREEN_HEIGHT);
-    int size = random(2,5);
-    float speed = ((float)random(1, 30)) / 100;
-  public:
-
-    void update() {
-      y -= speed;
-      if (y < 1) {
-        y = SCREEN_HEIGHT;
-      }
-    };
-
-    void draw() {
-      arduboy.drawCircle(x, y, size, WHITE);
-    };
-};
-
-Bubble bubbles[30];
+int player_x = SCREEN_WIDTH/2;
+int player_y = SCREEN_HEIGHT/2;
 
 void setup() {
   arduboy.begin();
@@ -41,14 +22,20 @@ void setup() {
 void loop() {
   arduboy.clear();
 
-  for (int i = 0; i < 30; i ++) {
-    Bubble bub = bubbles[i];
-
-    bub.update();
-    bub.draw();
-
-    bubbles[i] = bub;
+  if (arduboy.pressed(RIGHT_BUTTON)) {
+    player_x += 1;
+  } else if (arduboy.pressed(LEFT_BUTTON)) {
+    player_x -= 1;
   }
+
+  if (arduboy.pressed(DOWN_BUTTON)) {
+    player_y += 1;
+  } else if (arduboy.pressed(UP_BUTTON)) {
+    player_y -= 1;
+  }
+
+
+  arduboy.fillRect(player_x, player_y, 2, 2, WHITE);
 
   arduboy.display();
 }
