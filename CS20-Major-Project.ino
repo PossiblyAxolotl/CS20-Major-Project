@@ -1,7 +1,7 @@
 // PossiblyAxolotl
 // CS20 Final Project - Currently Unsure of End Goal
 // started Oct 24, 2023
-// Last modified Nov 16, 2023
+// Last modified Nov 17, 2023
 
 // 128x64 screen
 
@@ -9,34 +9,35 @@
 
 Arduboy2 arduboy;
 
+// define constants
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
 
-float player_x = SCREEN_WIDTH/2;
-float player_y = SCREEN_HEIGHT/2;
+#define MOVE_SPEED 0.1f
 
-float move_speed = 0.01;
+// define variables
+float player_x;
+float player_y;
 
+// set up game, run once
 void setup() {
+  // give variables values
+  player_x = SCREEN_WIDTH/2;
+  player_y = SCREEN_HEIGHT/2;
   arduboy.begin();
 }
 
+// mainloop
 void loop() {
-  arduboy.clear();
+  arduboy.clear(); // clear screen every frame
 
-  if (arduboy.pressed(RIGHT_BUTTON)) {
-    player_x += move_speed;
-  } else if (arduboy.pressed(LEFT_BUTTON)) {
-    player_x -= move_speed;
-  }
+  int x_input = (int)arduboy.pressed(RIGHT_BUTTON) - (int)arduboy.pressed(LEFT_BUTTON);
+  int y_input = (int)arduboy.pressed(DOWN_BUTTON) - (int)arduboy.pressed(UP_BUTTON);
 
-  if (arduboy.pressed(DOWN_BUTTON)) {
-    player_y += move_speed;
-  } else if (arduboy.pressed(UP_BUTTON)) {
-    player_y -= move_speed;
-  }
+  player_x += x_input * MOVE_SPEED;
+  player_y += y_input * MOVE_SPEED;
 
   arduboy.fillRect(player_x, player_y, 2, 2, WHITE);
 
-  arduboy.display();
+  arduboy.display(); // update screen to display changes
 }
