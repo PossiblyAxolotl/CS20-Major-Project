@@ -1,5 +1,6 @@
 // PossiblyAxolotl
 // CS20 Final Project - Currently Unsure of End Goal
+//
 // started Oct 24, 2023
 // Last modified Nov 17, 2023
 
@@ -35,6 +36,7 @@ void loop() {
   player_x += x_input * MOVE_SPEED;
   player_y += y_input * MOVE_SPEED;
 
+  // DRAWING
   arduboy.drawBitmap(2,2,test_testsprite,8,8,WHITE);
 
   arduboy.fillRect(player_x, player_y, 2, 2, WHITE);
