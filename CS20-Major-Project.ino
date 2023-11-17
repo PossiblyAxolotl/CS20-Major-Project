@@ -6,6 +6,7 @@
 // 128x64 screen
 
 #include <Arduboy2.h>
+#include "art.h"
 
 Arduboy2 arduboy;
 
@@ -33,6 +34,8 @@ void loop() {
 
   player_x += x_input * MOVE_SPEED;
   player_y += y_input * MOVE_SPEED;
+
+  arduboy.drawBitmap(2,2,test_testsprite,8,8,WHITE);
 
   arduboy.fillRect(player_x, player_y, 2, 2, WHITE);
 
