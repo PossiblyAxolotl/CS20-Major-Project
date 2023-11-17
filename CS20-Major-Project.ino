@@ -16,14 +16,11 @@ Arduboy2 arduboy;
 #define MOVE_SPEED 0.1f
 
 // define variables
-float player_x;
-float player_y;
+float player_x = SCREEN_WIDTH/2;
+float player_y = SCREEN_HEIGHT/2;
 
 // set up game, run once
 void setup() {
-  // give variables values
-  player_x = SCREEN_WIDTH/2;
-  player_y = SCREEN_HEIGHT/2;
   arduboy.begin();
 }
 
