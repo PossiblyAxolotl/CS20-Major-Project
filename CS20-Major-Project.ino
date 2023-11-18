@@ -57,14 +57,15 @@ void animate() {
 
 // mainloop
 void loop() {
+// didn't indent this as everything will be in here, keeps constant framerate
 if (arduboy.nextFrame()) {
   arduboy.clear(); // clear screen every frame
 
+  // get player input
   int x_input = (int)arduboy.pressed(RIGHT_BUTTON) - (int)arduboy.pressed(LEFT_BUTTON);
   int y_input = (int)arduboy.pressed(DOWN_BUTTON) - (int)arduboy.pressed(UP_BUTTON);
-
-  // if moving
-  if (x_input != 0 || y_input != 0) {
+  
+  if (x_input != 0 || y_input != 0) { // if moving
     // animation
     animate();
 
@@ -73,12 +74,13 @@ if (arduboy.nextFrame()) {
     // move player and collide
     player_x += x_input * MOVE_SPEED;
     player_y += y_input * MOVE_SPEED;
+
   } else if (player_frame != 0 && player_anim_timer != PLAYER_ANIM_WAIT_TIME) { // just stopped
     player_frame = 0;
     player_anim_timer = PLAYER_ANIM_WAIT_TIME;
   }
 
-  // DRAWING
+  // drawing
   arduboy.drawBitmap(player_x - PLAYER_SPRITE_WIDTH/2, player_y - PLAYER_SPRITE_HEIGHT/2, player_animation_frames[player_direction][player_frame], PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_HEIGHT);
 
   arduboy.display(); // update screen to display changes
