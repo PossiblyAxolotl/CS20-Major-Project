@@ -15,9 +15,9 @@ Arduboy2 arduboy;
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
 
-#define MOVE_SPEED 0.1f
+#define MOVE_SPEED 1
 
-#define PLAYER_ANIM_WAIT_TIME 60
+#define PLAYER_ANIM_WAIT_TIME 8
 
 // define variables
 float player_x = SCREEN_WIDTH/2;
@@ -37,6 +37,7 @@ const int player_directions[3][3] = { // temp values as not all art is made yet
 // set up game, run once
 void setup() {
   arduboy.begin();
+  arduboy.setFrameRate(60);
 }
 
 // animate player based on direction
@@ -56,6 +57,7 @@ void animate() {
 
 // mainloop
 void loop() {
+if (arduboy.nextFrame()) {
   arduboy.clear(); // clear screen every frame
 
   int x_input = (int)arduboy.pressed(RIGHT_BUTTON) - (int)arduboy.pressed(LEFT_BUTTON);
@@ -80,4 +82,5 @@ void loop() {
   arduboy.drawBitmap(player_x - PLAYER_SPRITE_WIDTH/2, player_y - PLAYER_SPRITE_HEIGHT/2, player_animation_frames[player_direction][player_frame], PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_HEIGHT);
 
   arduboy.display(); // update screen to display changes
+}
 }
