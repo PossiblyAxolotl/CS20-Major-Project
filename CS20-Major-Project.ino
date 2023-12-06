@@ -3,11 +3,13 @@
 // CS20 Final Project - Currently Unsure of End Goal    //
 //                                                      \\
 // started Oct 24, 2023                                 //
-// Last modified Nov 18, 2023                           \\
+// Last modified Dec 6, 2023                           \\
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//
 
 #include <Arduboy2.h>
 #include "./art/player_art.h"
+#include "./art/tile_art.h"
+#include "./leveldata/maps.h"
 
 Arduboy2 arduboy;
 
@@ -33,6 +35,16 @@ const int player_directions[3][3] = { // temp values as not all art is made yet
   {1,1,3},
   {0,0,0}
 };
+
+void drawMap() {
+  for (int x = 0; x < TILEMAP_WIDTH; x++) {
+    for (int y = 0; y < TILEMAP_HEIGHT; y++) {
+      if (map_01[y][x] == 1) {
+        arduboy.drawBitmap(x*BLOCK_SIZE, y*BLOCK_SIZE, blocktile, BLOCK_SIZE,BLOCK_SIZE);
+      }
+    }
+  }
+}
 
 // set up game, run once
 void setup() {
@@ -64,9 +76,9 @@ if (arduboy.nextFrame()) {
   // get player input
   int x_input = (int)arduboy.pressed(RIGHT_BUTTON) - (int)arduboy.pressed(LEFT_BUTTON);
   int y_input = (int)arduboy.pressed(DOWN_BUTTON) - (int)arduboy.pressed(UP_BUTTON);
-  
+
   if (x_input != 0 || y_input != 0) { // if moving
-    // animation
+    // player animation
     animate();
 
     player_direction = player_directions[y_input+1][x_input+1];
@@ -81,6 +93,8 @@ if (arduboy.nextFrame()) {
   }
 
   // drawing
+  drawMap();
+
   arduboy.drawBitmap(player_x - PLAYER_SPRITE_WIDTH/2, player_y - PLAYER_SPRITE_HEIGHT/2, player_animation_frames[player_direction][player_frame], PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_HEIGHT);
 
   arduboy.display(); // update screen to display changes
