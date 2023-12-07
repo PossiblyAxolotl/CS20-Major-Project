@@ -9,7 +9,7 @@
 #include <Arduboy2.h>
 #include "./art/player_art.h"
 #include "./art/tile_art.h"
-#include "./leveldata/maps.h"
+#include "./data/maps.h"
 
 Arduboy2 arduboy;
 
