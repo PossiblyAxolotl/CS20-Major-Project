@@ -10,6 +10,7 @@
 #include "./art/player_art.h"
 #include "./art/tile_art.h"
 #include "./data/maps.h"
+#include "./data/player_consts.h"
 
 Arduboy2 arduboy;
 
@@ -30,16 +31,12 @@ int player_frame = 0;
 int player_direction = 0;
 int player_anim_timer = PLAYER_ANIM_WAIT_TIME;
 
-const int player_directions[3][3] = { // temp values as not all art is made yet
-  {2,2,2},
-  {1,1,3},
-  {0,0,0}
-};
+int mapID = 0;
 
 void drawMap() {
   for (int x = 0; x < TILEMAP_WIDTH; x++) {
     for (int y = 0; y < TILEMAP_HEIGHT; y++) {
-      if (map_01[y][x] == 1) {
+      if (maps[mapID][y][x] == 1) {
         arduboy.drawBitmap(x*BLOCK_SIZE, y*BLOCK_SIZE, blocktile, BLOCK_SIZE,BLOCK_SIZE);
       }
     }
