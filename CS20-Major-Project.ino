@@ -3,13 +3,12 @@
 // CS20 Final Project - Currently Unsure of End Goal    //
 //                                                      \\
 // started Oct 24, 2023                                 //
-// Last modified Dec 6, 2023                           \\
+// Last modified Dec 8, 2023                            \\
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//
 
 #include <Arduboy2.h>
 #include "./art/player_art.h"
 #include "./art/tile_art.h"
-#include "./data/maps.h"
 
 Arduboy2 arduboy;
 
@@ -30,18 +29,24 @@ int player_frame = 0;
 int player_direction = 0;
 int player_anim_timer = PLAYER_ANIM_WAIT_TIME;
 
+int state = 2; // 1 = game
+int transition_offset = 128;
+
 const int player_directions[3][3] = { // temp values as not all art is made yet
   {2,2,2},
   {1,1,3},
   {0,0,0}
 };
 
-void drawMap() {
+void drawRoom(int offset = 0) {
+  // draw outline (intentionally too tall)
+  arduboy.drawRect(0+offset,0,128,65);
 
-  arduboy.drawRect(0,0,128,65);
-  arduboy.drawLine(1,1,126,1);
-  arduboy.fillRect(2,3,124,4);
+  // draw extra line that makes the back 2 thick
+  arduboy.drawLine(1+offset,1,126+offset,1);
 
+  // draw back rect
+  arduboy.fillRect(2+offset,3,124,4);
 }
 
 // set up game, run once
@@ -51,7 +56,7 @@ void setup() {
 }
 
 // animate player based on direction
-void animate() {
+void animatePlayer() {
   player_anim_timer --;
 
   if (player_anim_timer < 1) {
@@ -65,8 +70,8 @@ void animate() {
   }
 }
 
-// mainloop
-void loop() {
+// modes
+void processGame() {
 // didn't indent this as everything will be in here, keeps constant framerate
 if (arduboy.nextFrame()) {
   arduboy.clear(); // clear screen every frame
@@ -77,7 +82,7 @@ if (arduboy.nextFrame()) {
 
   if (x_input != 0 || y_input != 0) { // if moving
     // player animation
-    animate();
+    animatePlayer();
 
     player_direction = player_directions[y_input+1][x_input+1];
 
@@ -91,10 +96,40 @@ if (arduboy.nextFrame()) {
   }
 
   // drawing
-  drawMap();
+  drawRoom();
 
   arduboy.drawBitmap(player_x - PLAYER_SPRITE_WIDTH/2, player_y - PLAYER_SPRITE_HEIGHT/2, player_animation_frames[player_direction][player_frame], PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_HEIGHT);
 
   arduboy.display(); // update screen to display changes
 }
+}
+
+void processTransition() {
+if (arduboy.nextFrame()) {
+  // clear screen
+  arduboy.clear();
+
+  // draw the room twice for scrolling animation
+  drawRoom(transition_offset);
+  drawRoom(transition_offset-128);
+
+  // scroll until the screen is in the right place, then go to game mode
+  if (transition_offset > 0) {
+    transition_offset -= 1;
+  } else {
+    state = 1;
+  }
+
+  arduboy.display();
+}
+}
+
+// mainloop
+
+void loop() {
+  if (state == 1) {
+    processGame();
+  } else if (state == 2) {
+    processTransition();
+  }
 }
