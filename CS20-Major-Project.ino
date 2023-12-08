@@ -36,7 +36,7 @@ int mapID = 0;
 void drawMap() {
   for (int x = 0; x < TILEMAP_WIDTH; x++) {
     for (int y = 0; y < TILEMAP_HEIGHT; y++) {
-      if (maps[mapID][y][x] == 1) {
+      if (map_01[y][x] == 1) {
         arduboy.drawBitmap(x*BLOCK_SIZE, y*BLOCK_SIZE, blocktile, BLOCK_SIZE,BLOCK_SIZE);
       }
     }
