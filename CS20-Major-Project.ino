@@ -79,7 +79,7 @@ if (arduboy.nextFrame()) {
   int x_input = (int)arduboy.pressed(RIGHT_BUTTON) - (int)arduboy.pressed(LEFT_BUTTON);
   int y_input = (int)arduboy.pressed(DOWN_BUTTON) - (int)arduboy.pressed(UP_BUTTON);
 
-  if (arduboy.pressed(A_BUTTON)) {
+  if (arduboy.justPressed(A_BUTTON)) {
     current_map = 1;
   }
 
