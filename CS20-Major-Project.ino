@@ -37,13 +37,11 @@ const int player_directions[3][3] = { // temp values as not all art is made yet
 };
 
 void drawMap() {
-  for (int x = 0; x < TILEMAP_WIDTH; x++) {
-    for (int y = 0; y < TILEMAP_HEIGHT; y++) {
-      if (map_01[y][x] == 1) {
-        arduboy.drawBitmap(x*BLOCK_SIZE, y*BLOCK_SIZE, blocktile, BLOCK_SIZE,BLOCK_SIZE);
-      }
-    }
-  }
+
+  arduboy.drawRect(0,0,128,65);
+  arduboy.drawLine(1,1,126,1);
+  arduboy.fillRect(2,3,124,4);
+
 }
 
 // set up game, run once
