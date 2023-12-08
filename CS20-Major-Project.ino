@@ -30,9 +30,7 @@ int player_frame = 0;
 int player_direction = 0;
 int player_anim_timer = PLAYER_ANIM_WAIT_TIME;
 
-int mapID = 0;
-
-const int player_directions[3][3] = {
+const int player_directions[3][3] = { // temp values as not all art is made yet
   {2,2,2},
   {1,1,3},
   {0,0,0}
