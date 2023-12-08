@@ -36,12 +36,10 @@ const int player_directions[3][3] = { // temp values as not all art is made yet
   {0,0,0}
 };
 
-int current_map = 0;
-
 void drawMap() {
   for (int x = 0; x < TILEMAP_WIDTH; x++) {
     for (int y = 0; y < TILEMAP_HEIGHT; y++) {
-      if (maps[current_map][y][x] == 1) {
+      if (map_01[y][x] == 1) {
         arduboy.drawBitmap(x*BLOCK_SIZE, y*BLOCK_SIZE, blocktile, BLOCK_SIZE, BLOCK_SIZE);
       }
     }
@@ -78,10 +76,6 @@ if (arduboy.nextFrame()) {
   // get player input
   int x_input = (int)arduboy.pressed(RIGHT_BUTTON) - (int)arduboy.pressed(LEFT_BUTTON);
   int y_input = (int)arduboy.pressed(DOWN_BUTTON) - (int)arduboy.pressed(UP_BUTTON);
-
-  if (arduboy.justPressed(A_BUTTON)) {
-    current_map = 1;
-  }
 
   if (x_input != 0 || y_input != 0) { // if moving
     // player animation
