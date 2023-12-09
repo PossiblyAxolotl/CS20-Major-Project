@@ -9,20 +9,17 @@
 #include <Arduboy2.h>
 #include "./art/player_art.h"
 #include "./art/tile_art.h"
+#include "./art/enemy_art.h"
 
 Arduboy2 arduboy;
 
 // define constants
-#define SCREEN_WIDTH 128
-#define SCREEN_HEIGHT 64
-
 #define MOVE_SPEED 1
-
 #define PLAYER_ANIM_WAIT_TIME 8
 
 // define variables
-float player_x = SCREEN_WIDTH/2;
-float player_y = SCREEN_HEIGHT/2;
+float player_x = WIDTH/2;
+float player_y = HEIGHT/2;
 
 // player animation variables
 int player_frame = 0;
@@ -38,23 +35,23 @@ const int player_directions[3][3] = { // temp values as not all art is made yet
   {0,0,0}
 };
 
-void drawRoom(int offset = 0) {
-  // draw outline (intentionally too tall)
-  arduboy.drawRect(0+offset,0,128,65);
+class Enemy {
 
-  // draw extra line that makes the back 2 thick
-  arduboy.drawLine(1+offset,1,126+offset,1);
+};
 
-  // draw back rect
-  arduboy.fillRect(2+offset,3,124,4);
-}
+Enemy* enemies;
 
 // set up game, run once
 void setup() {
+  randomSeed(analogRead(0));
+
+  enemies = new Enemy[2];
+
   arduboy.begin();
   arduboy.setFrameRate(60);
 }
 
+/// Player
 // animate player based on direction
 void animatePlayer() {
   player_anim_timer --;
@@ -70,18 +67,33 @@ void animatePlayer() {
   }
 }
 
+// clamp player bounds
 void clampPlayerToBounds() {
+  // limit player x position
   if (player_x < 9) {
     player_x = 9;
   } else if (player_x > 119) {
     player_x = 119;
   }
 
+  // limit player y position
   if (player_y < 16) {
     player_y = 16;
   } else if (player_y > 56) {
     player_y = 56;
   }
+}
+
+/// other drawing
+void drawRoom(int offset = 0) {
+  // draw outline (intentionally too tall)
+  arduboy.drawRect(0+offset,0,128,65);
+
+  // draw extra line that makes the back 2 thick
+  arduboy.drawLine(1+offset,1,126+offset,1);
+
+  // draw back rect
+  arduboy.fillRect(2+offset,3,124,4);
 }
 
 // modes
