@@ -70,6 +70,20 @@ void animatePlayer() {
   }
 }
 
+void clampPlayerToBounds() {
+  if (player_x < 9) {
+    player_x = 9;
+  } else if (player_x > 119) {
+    player_x = 119;
+  }
+
+  if (player_y < 16) {
+    player_y = 16;
+  } else if (player_y > 56) {
+    player_y = 56;
+  }
+}
+
 // modes
 void processGame() {
 // didn't indent this as everything will be in here, keeps constant framerate
@@ -95,9 +109,12 @@ if (arduboy.nextFrame()) {
     player_anim_timer = PLAYER_ANIM_WAIT_TIME;
   }
 
-  // drawing
+  clampPlayerToBounds();
+
+  /// drawing
   drawRoom();
 
+  // player draw
   arduboy.drawBitmap(player_x - PLAYER_SPRITE_WIDTH/2, player_y - PLAYER_SPRITE_HEIGHT/2, player_animation_frames[player_direction][player_frame], PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_HEIGHT);
 
   arduboy.display(); // update screen to display changes
@@ -125,7 +142,6 @@ if (arduboy.nextFrame()) {
 }
 
 // mainloop
-
 void loop() {
   if (state == 1) {
     processGame();
