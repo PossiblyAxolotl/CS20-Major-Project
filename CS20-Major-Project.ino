@@ -35,10 +35,10 @@ const int player_directions[3][3] = { // temp values as not all art is made yet
   {0,0,0}
 };
 
-class Skeleton {
-  private:
-    int x = random(20,108);
-    int y = random(20, 44);
+class Enemy {
+  public:
+    int x = random(20,WIDTH-20);
+    int y = random(20, HEIGHT-20);
     
     int wait_time = 30;
     int move_speed = 2;
@@ -46,18 +46,20 @@ class Skeleton {
     int total_distance = 0;
 
     // wait for wait time, move by move speed until total distance travelled >= move_distance
+};
 
-  public:
-    void update(int to_x, int to_y) {
-      arduboy.drawPixel(x, y);
-    }
+class Skeleton : private Enemy {
+    public:
+      void update(int to_x, int to_y) {
+        arduboy.drawPixel(x, y);
+      }
 };
 
 Skeleton* skeletons;
 
 // set up game, run once
 void setup() {
-  randomSeed(analogRead(0));
+  randomSeed(analogRead(0)); // randomize the game on arduboy, since computers don't have pins it's always the same
 
   skeletons = new Skeleton[2];
 
