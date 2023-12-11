@@ -3,7 +3,7 @@
 // CS20 Final Project - Currently Unsure of End Goal    //
 //                                                      \\
 // started Oct 24, 2023                                 //
-// Last modified Dec 8, 2023                            \\
+// Last modified Dec 11, 2023                            \\
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//
 
 #include <Arduboy2.h>
@@ -35,17 +35,31 @@ const int player_directions[3][3] = { // temp values as not all art is made yet
   {0,0,0}
 };
 
-class Enemy {
+class Skeleton {
+  private:
+    int x = random(20,108);
+    int y = random(20, 44);
+    
+    int wait_time = 30;
+    int move_speed = 2;
+    int move_distance = 6;
+    int total_distance = 0;
 
+    // wait for wait time, move by move speed until total distance travelled >= move_distance
+
+  public:
+    void update(int to_x, int to_y) {
+      arduboy.drawPixel(x, y);
+    }
 };
 
-Enemy* enemies;
+Skeleton* skeletons;
 
 // set up game, run once
 void setup() {
   randomSeed(analogRead(0));
 
-  enemies = new Enemy[2];
+  skeletons = new Skeleton[2];
 
   arduboy.begin();
   arduboy.setFrameRate(60);
@@ -125,6 +139,8 @@ if (arduboy.nextFrame()) {
 
   /// drawing
   drawRoom();
+
+  skeletons[1].update(player_x, player_y);
 
   // player draw
   arduboy.drawBitmap(player_x - PLAYER_SPRITE_WIDTH/2, player_y - PLAYER_SPRITE_HEIGHT/2, player_animation_frames[player_direction][player_frame], PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_HEIGHT);
