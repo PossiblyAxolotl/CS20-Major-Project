@@ -144,6 +144,10 @@ if (arduboy.nextFrame()) {
 
   skeletons[1].update(player_x, player_y);
 
+  arduboy.drawPixel(20,20);
+
+  arduboy.drawPixel(108,44);
+
   // player draw
   arduboy.drawBitmap(player_x - PLAYER_SPRITE_WIDTH/2, player_y - PLAYER_SPRITE_HEIGHT/2, player_animation_frames[player_direction][player_frame], PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_HEIGHT);
 
