@@ -1,0 +1,21 @@
+#top-bar a {
+    position: absolute;
+    z-index: 999;
+}
+
+button {
+    opacity: 10%;
+    transition: all 0.25s;
+
+    background-color: rgba(0,0,0,0);
+    color:white;
+    
+    border-style: solid;
+    border-radius:15px;
+}
+
+button:hover {
+    opacity: 100%;
+
+    background-color: black;
+}

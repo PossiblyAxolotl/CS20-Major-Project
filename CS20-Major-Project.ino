@@ -17,6 +17,12 @@ Arduboy2 arduboy;
 #define MOVE_SPEED 1
 #define PLAYER_ANIM_WAIT_TIME 8
 
+#define ENEMY_SPAWN_MIN_X 20
+#define ENEMY_SPAWN_MIN_Y 20
+
+#define ENEMY_SPAWN_MAX_X WIDTH-20
+#define ENEMY_SPAWN_MAX_Y HEIGHT-20
+
 // define variables
 float player_x = WIDTH/2;
 float player_y = HEIGHT/2;
@@ -37,8 +43,8 @@ const int player_directions[3][3] = { // temp values as not all art is made yet
 
 class Enemy {
   public:
-    int x = random(20,WIDTH-20);
-    int y = random(20, HEIGHT-20);
+    int x = random(ENEMY_SPAWN_MIN_X,ENEMY_SPAWN_MAX_X);
+    int y = random(ENEMY_SPAWN_MIN_Y, ENEMY_SPAWN_MAX_Y);
     
     int wait_time = 30;
     int move_speed = 2;
