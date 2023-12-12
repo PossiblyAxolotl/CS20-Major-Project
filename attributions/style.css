@@ -15,6 +15,8 @@ p, h1, a {
 
 hr {
     color:White;
+    border-style:solid;
+    border-color:white;
 }
 
 a {
