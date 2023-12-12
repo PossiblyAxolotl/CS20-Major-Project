@@ -3,6 +3,10 @@
     src: url("/Jellee-Roman.otf");
 }
 
+html {
+    background-color: black;
+}
+
 button {
     font-family: jellee;
 }
