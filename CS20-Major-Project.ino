@@ -18,16 +18,19 @@ Arduboy2 arduboy;
 #include <ArdBitmap.h>
 ArdBitmap<WIDTH, HEIGHT> ardbitmap;
 
-// define constants
+/// define constants
+// player
 #define MOVE_SPEED 1
 #define PLAYER_ANIM_WAIT_TIME 8
 
+// enemy spawns
 #define ENEMY_SPAWN_MIN_X 20
 #define ENEMY_SPAWN_MIN_Y 20
 
 #define ENEMY_SPAWN_MAX_X WIDTH-20
 #define ENEMY_SPAWN_MAX_Y HEIGHT-20
 
+// skeleton
 #define SKELE_MAX_MOVE_DISTANCE 9
 #define SKELE_WAIT_TIME 30
 #define SKELE_MOVE_SPEED 2
@@ -41,15 +44,18 @@ int player_frame = 0;
 int player_direction = 0;
 int player_anim_timer = PLAYER_ANIM_WAIT_TIME;
 
+//misc game variables
 int state = 2; // 1 = game
 int transition_offset = 128;
 
-const int player_directions[3][3] = { // temp values as not all art is made yet
+const int player_directions[3][3] = { 
   {2,2,2},
   {1,1,3},
   {0,0,0}
 };
 
+/// define enemy classes
+// base enemy class
 class Enemy {
   public:
     int x = random(ENEMY_SPAWN_MIN_X,ENEMY_SPAWN_MAX_X);
@@ -62,6 +68,7 @@ class Enemy {
     // wait for wait time, move by move speed until total distance travelled >= move_distance
 };
 
+// skeleton
 class Skeleton : private Enemy {
   public:
     void update(int to_x, int to_y) {
@@ -101,6 +108,7 @@ class Skeleton : private Enemy {
     }
 };
 
+// create a list of skeletons as a pointer so I can change the length and stuff later
 Skeleton* skeletons;
 
 // set up game, run once
