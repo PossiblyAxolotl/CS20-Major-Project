@@ -1,3 +1,35 @@
+@font-face {
+    font-family: jellee;
+    src: url("/Jellee-Roman.otf");
+}
+
+html, button {
+    background-color: black;
+    font-family: jellee;
+}
+
+p, h1, a {
+    color:white;
+
+    margin-bottom: 30px;
+}
+
+a {
+    padding: 5px;
+
+    text-decoration: none;
+}
+
+a:hover {
+    color: lightgray;
+    text-decoration: underline;
+}
+
+a:active {
+    color:gray;
+    text-decoration: underline;
+}
+
 body {
     text-align: center;
 
@@ -7,4 +39,30 @@ body {
     position:absolute;
 
     transform: rotate(0deg) translate(-50%, -50%);
+}
+
+button {
+    transition: all 0.25s;
+
+    background-color: rgba(0,0,0,0);
+    color:white;
+
+    padding-left:10px;
+    padding-right: 10px;
+    padding-top:3px;
+    padding-bottom:3px;
+    
+    border-style: solid;
+    border-radius:15px;
+    border-color:color;
+}
+
+button:hover {
+    color:grey;
+    cursor:pointer;
+}
+
+button:active {
+    color: lightgray;
+    cursor:pointer;
 }
