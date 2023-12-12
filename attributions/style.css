@@ -1,18 +1,20 @@
 @font-face {
     font-family: jellee;
-    src: url("/Jellee-Roman.otf");
+    src: url("../Jellee-Roman.otf");
 }
 
 html, button {
     background-color: black;
     font-family: jellee;
-    font-size: 100%;
+    font-size: auto;
 }
 
 p, h1, a {
     color:white;
+}
 
-    margin-bottom: 30px;
+br {
+    margin-bottom:20px;
 }
 
 a {
