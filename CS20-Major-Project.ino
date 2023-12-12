@@ -23,6 +23,10 @@ Arduboy2 arduboy;
 #define ENEMY_SPAWN_MAX_X WIDTH-20
 #define ENEMY_SPAWN_MAX_Y HEIGHT-20
 
+#define SKELE_MAX_MOVE_DISTANCE 9
+#define SKELE_WAIT_TIME 30
+#define SKELE_MOVE_SPEED 2
+
 // define variables
 float player_x = WIDTH/2;
 float player_y = HEIGHT/2;
@@ -41,24 +45,58 @@ const int player_directions[3][3] = { // temp values as not all art is made yet
   {0,0,0}
 };
 
+uint8_t* flip(uint8_t arr []) {
+  const int len = sizeof(arr)/sizeof(arr[0]);
+  uint8_t* new_arr = new uint8_t[len];
+
+  for (int i = 0; i < len; i++) {
+    new_arr[i] = arr[len-i-1];
+  }
+
+  return new_arr;
+}
+
 class Enemy {
   public:
     int x = random(ENEMY_SPAWN_MIN_X,ENEMY_SPAWN_MAX_X);
     int y = random(ENEMY_SPAWN_MIN_Y, ENEMY_SPAWN_MAX_Y);
     
-    int wait_time = 30;
-    int move_speed = 2;
-    int move_distance = 6;
+    int wait_time = random(10,30);
     int total_distance = 0;
+    int frame = 0;
 
     // wait for wait time, move by move speed until total distance travelled >= move_distance
 };
 
 class Skeleton : private Enemy {
-    public:
-      void update(int to_x, int to_y) {
-        arduboy.drawPixel(x, y);
+  public:
+    void update(int to_x, int to_y) {
+      arduboy.drawBitmap(x,y,flip(skele_frames[frame]), SKELE_SPRITE_WIDTH, SKELE_SPRITE_HEIGHT);
+
+      wait_time --;
+
+      if (wait_time < 0) {
+        wait_time = SKELE_WAIT_TIME;
+
+        // animate skeleton
+        frame ++;
+        if (frame > SKELE_SPRITE_FRAME_AMOUNT) {
+          frame = 0;
+        }
+
+        if (to_x > x) {
+          x += SKELE_MOVE_SPEED;
+        } else if (to_x < x) {
+          x -= SKELE_MOVE_SPEED;
+        }
+
+        if (to_y > y) {
+          y += SKELE_MOVE_SPEED;
+        } else if (to_y < y) {
+          y -= SKELE_MOVE_SPEED;
+        }
       }
+    }
 };
 
 Skeleton* skeletons;
@@ -148,7 +186,7 @@ if (arduboy.nextFrame()) {
   /// drawing
   drawRoom();
 
-  skeletons[1].update(player_x, player_y);
+  skeletons[1].update(player_x - PLAYER_SPRITE_WIDTH/2, player_y - PLAYER_SPRITE_HEIGHT/2);
 
   arduboy.drawPixel(20,20);
 
