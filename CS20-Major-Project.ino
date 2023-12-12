@@ -65,6 +65,8 @@ class Enemy {
     int frame = 0;
     int mirror = MIRROR_NONE;
 
+    bool alive = true;
+
     // wait for wait time, move by move speed until total distance travelled >= move_distance
 };
 
@@ -72,44 +74,69 @@ class Enemy {
 class Skeleton : private Enemy {
   public:
     void update(int to_x, int to_y) {
-      ardbitmap.drawBitmap(x, y, skele_frames[frame], SKELE_SPRITE_WIDTH, SKELE_SPRITE_HEIGHT, WHITE, ALIGN_CENTER, mirror);
+      if (alive) {
+        ardbitmap.drawBitmap(x, y, skele_frames[frame], SKELE_SPRITE_WIDTH, SKELE_SPRITE_HEIGHT, WHITE, ALIGN_CENTER, mirror);
 
-      wait_time --;
+        wait_time --;
 
-      if (to_x > x) {
-        mirror = MIRROR_HORIZONTAL;
-      } else {
-        mirror = MIRROR_NONE;
-      }
-
-      if (wait_time < 0) {
-        wait_time = SKELE_WAIT_TIME;
-
-        // animate skeleton
-        frame ++;
-        if (frame > SKELE_SPRITE_FRAME_AMOUNT) {
-          frame = 0;
-        }
-
-        // move on x
         if (to_x > x) {
-          x += SKELE_MOVE_SPEED;
-        } else if (to_x < x) {
-          x -= SKELE_MOVE_SPEED;
+          mirror = MIRROR_HORIZONTAL;
+        } else {
+          mirror = MIRROR_NONE;
         }
 
-        // move on y
-        if (to_y > y) {
-          y += SKELE_MOVE_SPEED;
-        } else if (to_y < y) {
-          y -= SKELE_MOVE_SPEED;
+        if (wait_time < 0) {
+          wait_time = SKELE_WAIT_TIME;
+
+          // animate skeleton
+          frame ++;
+          if (frame > SKELE_SPRITE_FRAME_AMOUNT) {
+            frame = 0;
+          }
+
+          // move on x
+          if (to_x > x) {
+            x += SKELE_MOVE_SPEED;
+          } else if (to_x < x) {
+            x -= SKELE_MOVE_SPEED;
+          }
+
+          // move on y
+          if (to_y > y) {
+            y += SKELE_MOVE_SPEED;
+          } else if (to_y < y) {
+            y -= SKELE_MOVE_SPEED;
+          }
         }
+      } else {
+        // draw pile of bones in spot
       }
+    }
+};
+
+class Trapdoor {
+  private:
+    int x = random(ENEMY_SPAWN_MIN_X, ENEMY_SPAWN_MAX_X);
+    int y = random(ENEMY_SPAWN_MIN_Y, ENEMY_SPAWN_MAX_Y);
+
+  public:
+    bool closed = true;
+
+    void draw() {
+      arduboy.drawBitmap(x, y, trapdoor_frames[(int)closed], TRAPDOOR_SPRITE_WIDTH, TRAPDOOR_SPRITE_HEIGHT);
+    }
+
+    void reset() {
+      x = random(ENEMY_SPAWN_MIN_X, ENEMY_SPAWN_MAX_X);
+      y = random(ENEMY_SPAWN_MIN_Y, ENEMY_SPAWN_MAX_Y);
+      closed = true;
     }
 };
 
 // create a list of skeletons as a pointer so I can change the length and stuff later
 Skeleton* skeletons;
+
+Trapdoor trapdoor;
 
 // set up game, run once
 void setup() {
@@ -195,6 +222,8 @@ if (arduboy.nextFrame()) {
 
   /// drawing
   drawRoom();
+
+  trapdoor.draw();
 
   skeletons[1].update(player_x, player_y);
 
