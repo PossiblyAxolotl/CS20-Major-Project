@@ -3,7 +3,7 @@
 // CS20 Final Project - Currently Unsure of End Goal    //
 //                                                      \\
 // started Oct 24, 2023                                 //
-// Last modified Dec 11, 2023                            \\
+// Last modified Dec 12, 2023                            \\
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//
 
 #include <Arduboy2.h>
@@ -12,6 +12,11 @@
 #include "./art/enemy_art.h"
 
 Arduboy2 arduboy;
+
+// this code MUST be done in this order, completely ruins all my #include s up there
+#define ARDBITMAP_SBUF arduboy.getBuffer()
+#include <ArdBitmap.h>
+ArdBitmap<WIDTH, HEIGHT> ardbitmap;
 
 // define constants
 #define MOVE_SPEED 1
@@ -45,25 +50,14 @@ const int player_directions[3][3] = { // temp values as not all art is made yet
   {0,0,0}
 };
 
-uint8_t* flip(uint8_t arr []) {
-  const int len = sizeof(arr)/sizeof(arr[0]);
-  uint8_t* new_arr = new uint8_t[len];
-
-  for (int i = 0; i < len; i++) {
-    new_arr[i] = arr[len-i-1];
-  }
-
-  return new_arr;
-}
-
 class Enemy {
   public:
     int x = random(ENEMY_SPAWN_MIN_X,ENEMY_SPAWN_MAX_X);
     int y = random(ENEMY_SPAWN_MIN_Y, ENEMY_SPAWN_MAX_Y);
     
     int wait_time = random(10,30);
-    int total_distance = 0;
     int frame = 0;
+    int mirror = MIRROR_NONE;
 
     // wait for wait time, move by move speed until total distance travelled >= move_distance
 };
@@ -71,9 +65,15 @@ class Enemy {
 class Skeleton : private Enemy {
   public:
     void update(int to_x, int to_y) {
-      arduboy.drawBitmap(x,y,flip(skele_frames[frame]), SKELE_SPRITE_WIDTH, SKELE_SPRITE_HEIGHT);
+      ardbitmap.drawBitmap(x, y, skele_frames[frame], SKELE_SPRITE_WIDTH, SKELE_SPRITE_HEIGHT, WHITE, ALIGN_CENTER, mirror);
 
       wait_time --;
+
+      if (to_x > x) {
+        mirror = MIRROR_HORIZONTAL;
+      } else {
+        mirror = MIRROR_NONE;
+      }
 
       if (wait_time < 0) {
         wait_time = SKELE_WAIT_TIME;
@@ -84,12 +84,14 @@ class Skeleton : private Enemy {
           frame = 0;
         }
 
+        // move on x
         if (to_x > x) {
           x += SKELE_MOVE_SPEED;
         } else if (to_x < x) {
           x -= SKELE_MOVE_SPEED;
         }
 
+        // move on y
         if (to_y > y) {
           y += SKELE_MOVE_SPEED;
         } else if (to_y < y) {
@@ -186,7 +188,7 @@ if (arduboy.nextFrame()) {
   /// drawing
   drawRoom();
 
-  skeletons[1].update(player_x - PLAYER_SPRITE_WIDTH/2, player_y - PLAYER_SPRITE_HEIGHT/2);
+  skeletons[1].update(player_x, player_y);
 
   arduboy.drawPixel(20,20);
 
