@@ -25,6 +25,12 @@ ArdBitmap<WIDTH, HEIGHT> ardbitmap;
 #define MOVE_SPEED 1
 #define PLAYER_ANIM_WAIT_TIME 8
 
+#define PLAYER_MIN_X 9
+#define PLAYER_MAX_X 119
+
+#define PLAYER_MIN_Y 16
+#define PLAYER_MAX_Y 56
+
 // enemy spawns
 #define ENEMY_SPAWN_MIN_X 20
 #define ENEMY_SPAWN_MIN_Y 20
@@ -147,7 +153,7 @@ Trapdoor trapdoor;
 
 // set up game, run once
 void setup() {
-  //randomSeed(analogRead(5)); // randomize the game on arduboy, since computers don't have pins it's always the same
+  randomSeed(analogRead(0)); // randomize the game on arduboy, since computers don't have pins it's always the same
 
   skeletons = new Skeleton[number_of_skeletons];
 
@@ -176,17 +182,17 @@ void animatePlayer() {
 // clamp player bounds
 void clampPlayerToBounds() {
   // limit player x position
-  if (player_x < 9) {
-    player_x = 9;
-  } else if (player_x > 119) {
-    player_x = 119;
+  if (player_x < PLAYER_MIN_X) {
+    player_x = PLAYER_MIN_X;
+  } else if (player_x > PLAYER_MAX_X) {
+    player_x = PLAYER_MAX_X;
   }
 
   // limit player y position
-  if (player_y < 16) {
-    player_y = 16;
-  } else if (player_y > 56) {
-    player_y = 56;
+  if (player_y < PLAYER_MIN_Y) {
+    player_y = PLAYER_MIN_Y;
+  } else if (player_y > PLAYER_MAX_Y) {
+    player_y = PLAYER_MAX_Y;
   }
 }
 
