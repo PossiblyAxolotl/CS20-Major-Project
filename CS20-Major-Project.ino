@@ -7,11 +7,13 @@
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//
 
 #include <Arduboy2.h>
+#include <Sprites.h>
 #include "./art/player_art.h"
 #include "./art/tile_art.h"
 #include "./art/enemy_art.h"
 
 Arduboy2 arduboy;
+Sprites sprites;
 
 // this code MUST be done in this order, completely ruins all my #include s up there
 #define ARDBITMAP_SBUF arduboy.getBuffer()
@@ -61,7 +63,7 @@ class Enemy {
     int x = random(ENEMY_SPAWN_MIN_X,ENEMY_SPAWN_MAX_X);
     int y = random(ENEMY_SPAWN_MIN_Y, ENEMY_SPAWN_MAX_Y);
     
-    int wait_time = random(10,30);
+    int wait_time;
     int frame = 0;
     int mirror = MIRROR_NONE;
 
@@ -72,18 +74,21 @@ class Enemy {
 
 // skeleton
 class Skeleton : private Enemy {
+  private:
+    void setup() {
+      wait_time = random(10,50);
+      Serial.println("setup");
+    }
   public:
+    Skeleton() {
+      setup();
+    }
+    
     void update(int to_x, int to_y) {
       if (alive) {
         ardbitmap.drawBitmap(x, y, skele_frames[frame], SKELE_SPRITE_WIDTH, SKELE_SPRITE_HEIGHT, WHITE, ALIGN_CENTER, mirror);
 
         wait_time --;
-
-        if (to_x > x) {
-          mirror = MIRROR_HORIZONTAL;
-        } else {
-          mirror = MIRROR_NONE;
-        }
 
         if (wait_time < 0) {
           wait_time = SKELE_WAIT_TIME;
@@ -97,8 +102,10 @@ class Skeleton : private Enemy {
           // move on x
           if (to_x > x) {
             x += SKELE_MOVE_SPEED;
+            mirror = MIRROR_HORIZONTAL;
           } else if (to_x < x) {
             x -= SKELE_MOVE_SPEED;
+            mirror = MIRROR_NONE;
           }
 
           // move on y
@@ -140,9 +147,11 @@ Trapdoor trapdoor;
 
 // set up game, run once
 void setup() {
-  randomSeed(analogRead(0)); // randomize the game on arduboy, since computers don't have pins it's always the same
+  //randomSeed(analogRead(5)); // randomize the game on arduboy, since computers don't have pins it's always the same
 
-  skeletons = new Skeleton[2];
+  skeletons = new Skeleton[number_of_skeletons];
+
+  Serial.begin(9600);
 
   arduboy.begin();
   arduboy.setFrameRate(60);
@@ -221,18 +230,19 @@ if (arduboy.nextFrame()) {
   clampPlayerToBounds();
 
   /// drawing
-  drawRoom();
-
   trapdoor.draw();
 
-  skeletons[1].update(player_x, player_y);
+  sprites.drawOverwrite(player_x - PLAYER_SPRITE_WIDTH/2, player_y - PLAYER_SPRITE_HEIGHT/2, player_frames[player_direction], player_frame);
+  
+  drawRoom();
 
+  for (int i = 0; i < number_of_skeletons; i++) {
+    skeletons[i].update(player_x, player_y);
+  }
+  
   arduboy.drawPixel(20,20);
 
   arduboy.drawPixel(108,44);
-
-  // player draw
-  arduboy.drawBitmap(player_x - PLAYER_SPRITE_WIDTH/2, player_y - PLAYER_SPRITE_HEIGHT/2, player_animation_frames[player_direction][player_frame], PLAYER_SPRITE_WIDTH, PLAYER_SPRITE_HEIGHT);
 
   arduboy.display(); // update screen to display changes
 }
