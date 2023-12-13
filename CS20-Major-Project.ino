@@ -28,7 +28,7 @@ ArdBitmap<WIDTH, HEIGHT> ardbitmap;
 #define PLAYER_MIN_X 9
 #define PLAYER_MAX_X 119
 
-#define PLAYER_MIN_Y 16
+#define PLAYER_MIN_Y 10
 #define PLAYER_MAX_Y 56
 
 // enemy spawns
@@ -203,8 +203,10 @@ void drawRoom(int offset = 0) {
 
   // draw extra line that makes the back 2 thick
   arduboy.drawLine(1+offset,1,126+offset,1);
+}
 
-  // draw back rect
+void drawRoomWall(int offset = 0) {
+    // draw back for room
   arduboy.fillRect(2+offset,3,124,4);
 }
 
@@ -238,8 +240,13 @@ if (arduboy.nextFrame()) {
   /// drawing
   trapdoor.draw();
 
+  // draw back wall first since player can overlap
+  drawRoomWall();
+
+// draw player
   sprites.drawOverwrite(player_x - PLAYER_SPRITE_WIDTH/2, player_y - PLAYER_SPRITE_HEIGHT/2, player_frames[player_direction], player_frame);
-  
+
+  // draw room outline
   drawRoom();
 
   for (int i = 0; i < number_of_skeletons; i++) {
@@ -261,7 +268,10 @@ if (arduboy.nextFrame()) {
 
   // draw the room twice for scrolling animation
   drawRoom(transition_offset);
+  drawRoomWall(transition_offset);
+
   drawRoom(transition_offset-128);
+  drawRoomWall(transition_offset-128);
 
   // scroll until the screen is in the right place, then go to game mode
   if (transition_offset > 0) {
