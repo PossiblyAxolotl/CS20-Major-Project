@@ -41,6 +41,8 @@ button {
     background-color: black;
     color:white;
 
+    z-index: 999;
+
     padding-left:10px;
     padding-right: 10px;
     padding-top:3px;
