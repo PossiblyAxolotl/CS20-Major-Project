@@ -73,3 +73,12 @@ button:active {
     color: lightgray;
     cursor:pointer;
 }
+
+div {
+    border-radius: 25px;
+    border-color: white;
+    border-style: solid;
+    padding:20px;
+
+    margin:10px;
+}
