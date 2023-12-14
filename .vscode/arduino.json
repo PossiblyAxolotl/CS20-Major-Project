@@ -1,5 +1,0 @@
-{
-    "board": "arduino:avr:leonardo",
-    "port": "COM4",
-    "sketch": "CS20-Major-Project.ino"
-}
