@@ -90,6 +90,9 @@ video, img {
     max-width: 100%;
 
     vertical-align: middle;
+
+    margin:5px;
+    padding:5px;
 }
 
 gray {
