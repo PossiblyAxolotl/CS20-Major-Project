@@ -70,6 +70,7 @@ div {
     padding:20px;
 
     margin:10px;
+
 }
 
 h1 {
@@ -88,6 +89,7 @@ video, img {
     max-height: 300px;
     max-width: 100%;
 
+    vertical-align: middle;
 }
 
 gray {
