@@ -56,11 +56,13 @@ button {
 button:hover {
     color:grey;
     cursor:pointer;
+    transform: scale(110%);
 }
 
 button:active {
     color: lightgray;
     cursor:pointer;
+    transform: scale(100%);
 }
 
 div {
@@ -91,8 +93,17 @@ video, img {
 
     vertical-align: middle;
 
-    margin:5px;
     padding:5px;
+
+    transform: scale(98%);
+}
+
+a img, video {
+    transition: all 0.25s;
+}
+
+a img:hover, video:hover {
+    transform: scale(102%);
 }
 
 gray {

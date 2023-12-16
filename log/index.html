@@ -171,5 +171,115 @@
         <hr>
         <a href="https://github.com/PossiblyAxolotl/CS20-Major-Project/tree/9a48aa2b54b472be23d430c3d86e5f04a6ecec01"><button>View files</button></a>
     </div>
+
+    <div id="12-8-23">
+        <h1>
+            Dec 8, 2023
+        </h1>
+
+        <ul>
+            <li>Created sliding room transition</li>
+            <li>Created multiple maps</li>
+            <li>Experimented with ways to reduce memory used <gray>PROGMEM to store art, replacing unnecessary vars with #define</gray></li>
+            <li>Removed tilemap system <gray>replaced it with basic draw functions for the walls around the edges</gray></li>
+        </ul>
+
+        <video controls>
+            <source src="videos/roomtransi.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+
+        <hr>
+        <a href="https://github.com/PossiblyAxolotl/CS20-Major-Project/tree/63dc5e406267bbddea93e16a278370b402b72e15"><button>View files</button></a>
+    </div>
+
+    <div id="12-9-23">
+        <h1>
+            Dec 9, 2023
+        </h1>
+
+        <ul>
+            <li>Clamped player within walls</li>
+            <li>Created skeleton animation frames</li>
+            <li>Created base enemy object</li>
+        </ul>
+
+        <a href="images/skeleframes.png"><img src="images/skeleframes.png" alt="a 4-frame skeleton animation"></a>
+
+        <hr>
+        <a href="https://github.com/PossiblyAxolotl/CS20-Major-Project/tree/edaf131eb4dea9b5e6fa85787fc102b4c6148719"><button>View files</button></a>
+    </div>
+
+    <div id="12-10-23">
+        <h1>
+            Dec 10, 2023
+        </h1>
+
+        <ul>
+            <li>Created eye animation frames</li>
+        </ul>
+
+        <a href="images/eyeframes.png"><img src="images/eyeframes.png" alt="a 4-frame skeleton animation"></a>
+
+        <hr>
+        <a href="https://github.com/PossiblyAxolotl/CS20-Major-Project/tree/aef7f33874876ba898ced83070ee00d8d8d100f4"><button>View files</button></a>
+    </div>
+
+    <div id="12-11-23">
+        <h1>
+            Dec 11, 2023
+        </h1>
+
+        <ul>
+            <li>Started enemy / skeleton code <gray>created class, started outlining basic functions and variables</gray></li>
+            <li>Drawing pixels in skeleton min/max positions</li>
+            <li>Styled website</li>
+        </ul>
+
+        <hr>
+        <a href="https://github.com/PossiblyAxolotl/CS20-Major-Project/tree/b680052ce9ee84c04d1e996a086888394ba7985b"><button>View files</button></a>
+    </div>
+
+    <div id="12-12-23">
+        <h1>
+            Dec 12, 2023
+        </h1>
+
+        <ul>
+            <li>Tried to create custom sprite flipping code</li>
+            <li>Opted to user ArdBitmap to flip sprites</li>
+            <li>Create skeleton movement logic <gray>Just checks your X and Y in comparison to its, moves towards yours and switches frames every 30 frames</gray></li>
+            <li>Added trapdoor sprites and drawing</li>
+        </ul>
+
+        <a href="images/trapdoorframes.png"><img src="images/trapdoorframes.png" alt="2 frames of a trapdoor, one closed and one open"></a>
+        <video controls>
+            <source src="videos/skeleanim.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+
+        <hr>
+        <a href="https://github.com/PossiblyAxolotl/CS20-Major-Project/tree/7cd683911d008dc127c077df24890e5c82035fcb"><button>View files</button></a>
+    </div>
+
+    <div id="12-13-23">
+        <h1>
+            Dec 13, 2023
+        </h1>
+
+        <ul>
+            <li>Create log <a href="/log">/log.html (here)</a></li>
+            <li>Loop through skeletons to draw and process each, allows creation of multiple <gray>was actually a little hard since at first I was gonna use sizeof(array) and a for loop to loop through skeles, but that actually gives the amount of bytes it takes, not the amount of objects in it. Ended up changing a variable every time I create new skeletons that holds the amount.</gray></li>
+            <li>Fixed player overlap, allowing it to appear overtop the trapdoor and walls</li>
+        </ul>
+
+        <video controls>
+            <source src="videos/overlapskeletons.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+
+        <hr>
+        <a href="https://github.com/PossiblyAxolotl/CS20-Major-Project/tree/2fe33b8ac99e7f00e88a69e1c25728132d263c43"><button>View files</button></a>
+    </div>
 </body>
 </html>

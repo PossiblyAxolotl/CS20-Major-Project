@@ -67,11 +67,13 @@ button {
 button:hover {
     color:grey;
     cursor:pointer;
+    transform: scale(110%);
 }
 
 button:active {
     color: lightgray;
     cursor:pointer;
+    transform: scale(100%);
 }
 
 div {
