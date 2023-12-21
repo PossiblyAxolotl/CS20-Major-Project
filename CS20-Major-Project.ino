@@ -11,6 +11,7 @@
 #include "./art/player_art.h"
 #include "./art/tile_art.h"
 #include "./art/enemy_art.h"
+#include "./art/misc_art.h"
 
 Arduboy2 arduboy;
 Sprites sprites;
@@ -46,6 +47,7 @@ ArdBitmap<WIDTH, HEIGHT> ardbitmap;
 // define variables
 float player_x = WIDTH/2;
 float player_y = HEIGHT/2;
+int player_health = 3;
 
 // player animation variables
 int player_frame = 0;
@@ -256,6 +258,12 @@ if (arduboy.nextFrame()) {
   arduboy.drawPixel(20,20);
 
   arduboy.drawPixel(108,44);
+
+  arduboy.fillRect(0,0,27,9,BLACK);
+
+  arduboy.drawBitmap(0,0, heart_frames[0], HEART_SPRITE_SIZE,HEART_SPRITE_SIZE);
+  arduboy.drawBitmap(9,0, heart_frames[0], HEART_SPRITE_SIZE,HEART_SPRITE_SIZE);
+  arduboy.drawBitmap(18,0, heart_frames[0], HEART_SPRITE_SIZE,HEART_SPRITE_SIZE);
 
   arduboy.display(); // update screen to display changes
 }
