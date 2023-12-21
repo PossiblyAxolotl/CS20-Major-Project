@@ -3,7 +3,7 @@
 // CS20 Final Project - Currently Unsure of End Goal    //
 //                                                      \\
 // started Oct 24, 2023                                 //
-// Last modified Dec 14, 2023                            \\
+// Last modified Dec 21, 2023                           \\
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//
 
 #include <Arduboy2.h>
@@ -251,16 +251,20 @@ if (arduboy.nextFrame()) {
   // draw room outline
   drawRoom();
 
+  // draw enemies
   for (int i = 0; i < number_of_skeletons; i++) {
     skeletons[i].update(player_x, player_y);
   }
   
+  // remove these lines eventually
   arduboy.drawPixel(20,20);
 
   arduboy.drawPixel(108,44);
 
+  // heart background
   arduboy.fillRect(0,0,27,9,BLACK);
 
+  // hearts
   arduboy.drawBitmap(0,0, heart_frames[0], HEART_SPRITE_SIZE,HEART_SPRITE_SIZE);
   arduboy.drawBitmap(9,0, heart_frames[0], HEART_SPRITE_SIZE,HEART_SPRITE_SIZE);
   arduboy.drawBitmap(18,0, heart_frames[0], HEART_SPRITE_SIZE,HEART_SPRITE_SIZE);
