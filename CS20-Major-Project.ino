@@ -3,7 +3,7 @@
 // CS20 Final Project - Currently Unsure of End Goal    //
 //                                                      \\
 // started Oct 24, 2023                                 //
-// Last modified Dec 21, 2023                           \\
+// Last modified Jan 9, 2023                           \\
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//
 
 #include <Arduboy2.h>
@@ -47,7 +47,7 @@ ArdBitmap<WIDTH, HEIGHT> ardbitmap;
 // define variables
 float player_x = WIDTH/2;
 float player_y = HEIGHT/2;
-int player_health = 3;
+int player_health = 2;
 
 // player animation variables
 int player_frame = 0;
@@ -264,10 +264,15 @@ if (arduboy.nextFrame()) {
   // heart background
   arduboy.fillRect(0,0,27,9,BLACK);
 
-  // hearts
-  arduboy.drawBitmap(0,0, heart_frames[0], HEART_SPRITE_SIZE,HEART_SPRITE_SIZE);
-  arduboy.drawBitmap(9,0, heart_frames[0], HEART_SPRITE_SIZE,HEART_SPRITE_SIZE);
-  arduboy.drawBitmap(18,0, heart_frames[0], HEART_SPRITE_SIZE,HEART_SPRITE_SIZE);
+  // full hearts
+  for (int i = 0; i < player_health; i++) {
+    arduboy.drawBitmap(i * 9, 0, heart_frames[0], HEART_SPRITE_SIZE, HEART_SPRITE_SIZE);
+  }
+
+  // empty hearts
+  for (int i = 2; i > player_health-1; i--) {
+    arduboy.drawBitmap(i * 9, 0, heart_frames[1], HEART_SPRITE_SIZE, HEART_SPRITE_SIZE);
+  }
 
   arduboy.display(); // update screen to display changes
 }
@@ -296,9 +301,15 @@ if (arduboy.nextFrame()) {
 }
 }
 
+void processMenu() {
+  
+}
+
 // mainloop
 void loop() {
-  if (state == 1) {
+  if (state == 0) {
+    processMenu();
+  } else if (state == 1) {
     processGame();
   } else if (state == 2) {
     processTransition();
