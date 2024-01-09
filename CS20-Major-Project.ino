@@ -245,9 +245,6 @@ if (arduboy.nextFrame()) {
   // draw back wall first since player can overlap
   drawRoomWall();
 
-// draw player
-  sprites.drawOverwrite(player_x - PLAYER_SPRITE_WIDTH/2, player_y - PLAYER_SPRITE_HEIGHT/2, player_frames[player_direction], player_frame);
-
   // draw room outline
   drawRoom();
 
@@ -267,7 +264,10 @@ if (arduboy.nextFrame()) {
   // hearts
   arduboy.drawBitmap(0,0, heart_frames[0], HEART_SPRITE_SIZE,HEART_SPRITE_SIZE);
   arduboy.drawBitmap(9,0, heart_frames[0], HEART_SPRITE_SIZE,HEART_SPRITE_SIZE);
-  arduboy.drawBitmap(18,0, heart_frames[0], HEART_SPRITE_SIZE,HEART_SPRITE_SIZE);
+  arduboy.drawBitmap(18,0, heart_frames[1], HEART_SPRITE_SIZE,HEART_SPRITE_SIZE);
+
+  // draw player
+  sprites.drawOverwrite(player_x - PLAYER_SPRITE_WIDTH/2, player_y - PLAYER_SPRITE_HEIGHT/2, player_frames[player_direction], player_frame);
 
   arduboy.display(); // update screen to display changes
 }
