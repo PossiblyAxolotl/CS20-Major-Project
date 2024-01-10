@@ -55,8 +55,10 @@ int player_direction = 0;
 int player_anim_timer = PLAYER_ANIM_WAIT_TIME;
 
 //misc game variables
-int state = 2; // 1 = game
+int state = 0; // 0 = title, 1 = game, 2 = transition
 int transition_offset = 128;
+
+int game_level = 0;
 
 const int player_directions[3][3] = { 
   {2,2,2},
@@ -301,8 +303,19 @@ if (arduboy.nextFrame()) {
 }
 }
 
+void resetGame() {
+  player_health = 3;
+  game_level = 0;
+
+  transition_offset = 128;
+}
+
 void processMenu() {
-  
+  // start game on button press
+  if (arduboy.pressed(A_BUTTON) || arduboy.pressed(B_BUTTON)) {
+    resetGame();
+    state = 2;
+  }
 }
 
 // mainloop

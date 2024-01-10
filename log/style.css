@@ -20,14 +20,12 @@ hr {
 }
 
 a {
-    text-decoration: none;
     padding-bottom: 10px;
     color:gray;
 }
 
 a:hover {
     color: lightgray;
-    text-decoration: underline;
 }
 
 a:active {
