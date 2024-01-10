@@ -84,19 +84,3 @@ const unsigned char* heart_frames[2] = {
     full_heart,
     empty_heart
 };
-
-const uint8_t PROGMEM sword_vertical[] = {
-5, 10,
-0x80, 0xfe, 0x81, 0xfe, 0x80, 
-0x00, 0x00, 0x03, 0x00, 0x00, 
-};
-
-const uint8_t PROGMEM sword_horizontal[] = {
-10, 5,
-0x04, 0x04, 0x1f, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x04, 
-};
-
-const unsigned char* sword_frames[2] = {
-    sword_vertical,
-    sword_horizontal
-};

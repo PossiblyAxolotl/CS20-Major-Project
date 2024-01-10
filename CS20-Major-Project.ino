@@ -3,7 +3,7 @@
 // CS20 Final Project - Currently Unsure of End Goal    //
 //                                                      \\
 // started Oct 24, 2023                                 //
-// Last modified Jan 9, 2023                           \\
+// Last modified Jan 10, 2023                           \\
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//
 
 #include <Arduboy2.h>
@@ -52,6 +52,7 @@ int player_health = 2;
 // player animation variables
 int player_frame = 0;
 int player_direction = 0;
+int player_sword_time = 0;
 int player_anim_timer = PLAYER_ANIM_WAIT_TIME;
 
 //misc game variables
@@ -62,8 +63,15 @@ int game_level = 0;
 
 const int player_directions[3][3] = { 
   {2,2,2},
-  {1,1,3},
+  {1,0,3},
   {0,0,0}
+};
+
+const int sword_positions[4][2] = {
+  {1,1}, // down
+  {1,1}, // left
+  {1,1}, // up
+  {1,1}  // right
 };
 
 /// define enemy classes
@@ -224,19 +232,28 @@ if (arduboy.nextFrame()) {
   int x_input = (int)arduboy.pressed(RIGHT_BUTTON) - (int)arduboy.pressed(LEFT_BUTTON);
   int y_input = (int)arduboy.pressed(DOWN_BUTTON) - (int)arduboy.pressed(UP_BUTTON);
 
-  if (x_input != 0 || y_input != 0) { // if moving
-    // player animation
-    animatePlayer();
+  if (player_sword_time < 1) { // if you're not attacking
+    if (x_input != 0 || y_input != 0) { // if moving
+      // player animation
+      animatePlayer();
 
-    player_direction = player_directions[y_input+1][x_input+1];
+      player_direction = player_directions[y_input+1][x_input+1];
 
-    // move player and collide
-    player_x += x_input * MOVE_SPEED;
-    player_y += y_input * MOVE_SPEED;
+      // move player and collide
+      player_x += x_input * MOVE_SPEED;
+      player_y += y_input * MOVE_SPEED;
 
-  } else if (player_frame != 0 && player_anim_timer != PLAYER_ANIM_WAIT_TIME) { // just stopped
-    player_frame = 0;
-    player_anim_timer = PLAYER_ANIM_WAIT_TIME;
+      // check if player tries to attack
+      if (arduboy.justPressed(A_BUTTON)) {
+        player_sword_time = 60;
+      }
+
+    } else if (player_frame != 0 && player_anim_timer != PLAYER_ANIM_WAIT_TIME) { // just stopped
+      player_frame = 0;
+      player_anim_timer = PLAYER_ANIM_WAIT_TIME;
+    }
+  } else { // if you are attacking
+    player_sword_time--;
   }
 
   clampPlayerToBounds();
@@ -301,6 +318,9 @@ if (arduboy.nextFrame()) {
 
   arduboy.display();
 }
+
+// poll buttons & keep track of what's pressed, only needed for justPressed function
+arduboy.pollButtons();
 }
 
 void resetGame() {
@@ -312,10 +332,19 @@ void resetGame() {
 
 void processMenu() {
   // start game on button press
-  if (arduboy.pressed(A_BUTTON) || arduboy.pressed(B_BUTTON)) {
+  if (arduboy.anyPressed(A_BUTTON | B_BUTTON)) {
     resetGame();
     state = 2;
   }
+
+  // clear screen
+  arduboy.clear();
+  
+  // draw title
+  arduboy.drawBitmap(0,0,title_test,128,64);
+
+  // update screen
+  arduboy.display();
 }
 
 // mainloop
