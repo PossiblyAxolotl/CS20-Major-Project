@@ -244,7 +244,7 @@ if (arduboy.nextFrame()) {
       player_y += y_input * MOVE_SPEED;
 
       // check if player tries to attack
-      if (arduboy.justPressed(A_BUTTON)) {
+      if (arduboy.pressed(A_BUTTON)) {
         player_sword_time = 60;
       }
 
@@ -295,6 +295,9 @@ if (arduboy.nextFrame()) {
 
   arduboy.display(); // update screen to display changes
 }
+
+// poll / track buttons for justPressed and justReleased
+arduboy.pollButtons();
 }
 
 void processTransition() {
