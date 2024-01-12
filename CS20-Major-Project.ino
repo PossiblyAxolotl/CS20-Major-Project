@@ -1,9 +1,9 @@
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//
 // PossiblyAxolotl                                      \\
-// CS20 Final Project - Currently Unsure of End Goal    //
+// CS20 Final Project - Arcadey Dungeon Game            //
 //                                                      \\
 // started Oct 24, 2023                                 //
-// Last modified Jan 10, 2023                           \\
+// Last modified Jan 12, 2023                           \\
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//
 
 #include <Arduboy2.h>
@@ -16,7 +16,7 @@
 Arduboy2 arduboy;
 Sprites sprites;
 
-// this code MUST be done in this order, completely ruins all my #include s up there
+// this code MUST be done in this order, completely ruins all my #include stuff up there
 #define ARDBITMAP_SBUF arduboy.getBuffer()
 #include <ArdBitmap.h>
 ArdBitmap<WIDTH, HEIGHT> ardbitmap;
@@ -233,7 +233,8 @@ if (arduboy.nextFrame()) {
   int y_input = (int)arduboy.pressed(DOWN_BUTTON) - (int)arduboy.pressed(UP_BUTTON);
 
   if (player_sword_time < 1) { // if you're not attacking
-    if (x_input != 0 || y_input != 0) { // if moving
+    // only run if moving
+    if (x_input != 0 || y_input != 0) { 
       // player animation
       animatePlayer();
 
@@ -243,15 +244,17 @@ if (arduboy.nextFrame()) {
       player_x += x_input * MOVE_SPEED;
       player_y += y_input * MOVE_SPEED;
 
-      // check if player tries to attack
-      if (arduboy.pressed(A_BUTTON)) {
-        player_sword_time = 60;
-      }
-
-    } else if (player_frame != 0 && player_anim_timer != PLAYER_ANIM_WAIT_TIME) { // just stopped
+    // if you JUST stopped moving
+    } else if (player_frame != 0 && player_anim_timer != PLAYER_ANIM_WAIT_TIME) {
       player_frame = 0;
       player_anim_timer = PLAYER_ANIM_WAIT_TIME;
     }
+
+    // check if player tries to attack
+    if (arduboy.pressed(A_BUTTON)) {
+      player_sword_time = 60;
+    }
+    
   } else { // if you are attacking
     player_sword_time--;
   }
@@ -275,11 +278,10 @@ if (arduboy.nextFrame()) {
     skeletons[i].update(player_x, player_y);
   }
   
-  // remove these lines eventually
-  arduboy.drawPixel(20,20);
-
-  arduboy.drawPixel(108,44);
-
+  // sword
+  if (player_sword_time > 0) {
+      ardbitmap.drawBitmap(player_x, player_y, sword_frames[1], SWORD_HORI_WIDTH, SWORD_HORI_HEIGHT, WHITE, ALIGN_CENTER, MIRROR_NONE);
+  }
   // heart background
   arduboy.fillRect(0,0,27,9,BLACK);
 
@@ -296,8 +298,6 @@ if (arduboy.nextFrame()) {
   arduboy.display(); // update screen to display changes
 }
 
-// poll / track buttons for justPressed and justReleased
-arduboy.pollButtons();
 }
 
 void processTransition() {
@@ -322,8 +322,6 @@ if (arduboy.nextFrame()) {
   arduboy.display();
 }
 
-// poll buttons & keep track of what's pressed, only needed for justPressed function
-arduboy.pollButtons();
 }
 
 void resetGame() {

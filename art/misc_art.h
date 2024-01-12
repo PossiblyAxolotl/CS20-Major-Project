@@ -1,3 +1,11 @@
+#define SWORD_HORI_WIDTH  10
+#define SWORD_HORI_HEIGHT 5
+
+#define SWORD_VERTI_WIDTH  5
+#define SWORD_VERTI_HEIGHT 10
+
+#define BALL_ATTACK_SIZE 7
+
 const uint8_t PROGMEM ball[] = {
 7, 7,
 0x00, 0x1e, 0x3f, 0x3d, 0x3d, 0x3b, 0x1e, 
