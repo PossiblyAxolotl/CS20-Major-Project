@@ -67,11 +67,11 @@ const int player_directions[3][3] = {
   {0,0,0}
 };
 
-const int sword_positions[4][2] = {
-  {1,1}, // down
-  {1,1}, // left
-  {1,1}, // up
-  {1,1}  // right
+const int sword_positions[4][3] = { // x, y, mirror
+  {1,1, MIRROR_VERTICAL}, // down
+  {-6,0, MIRROR_HORIZONTAL}, // left
+  {1,1, MIRROR_NONE}, // up
+  {6,0, MIRROR_NONE}  // right
 };
 
 /// define enemy classes
@@ -280,7 +280,11 @@ if (arduboy.nextFrame()) {
   
   // sword
   if (player_sword_time > 0) {
-      ardbitmap.drawBitmap(player_x, player_y, sword_frames[1], SWORD_HORI_WIDTH, SWORD_HORI_HEIGHT, WHITE, ALIGN_CENTER, MIRROR_NONE);
+    if (player_direction == 1 || player_direction == 3) { // left right
+      ardbitmap.drawBitmap(player_x+sword_positions[player_direction][0], player_y+sword_positions[player_direction][1], sword_frames[1], SWORD_HORI_WIDTH, SWORD_HORI_HEIGHT, WHITE, ALIGN_CENTER, sword_positions[player_direction][2]);
+    } else { // up down
+      ardbitmap.drawBitmap(player_x+sword_positions[player_direction][0], player_y+sword_positions[player_direction][1], sword_frames[0], SWORD_VERTI_WIDTH, SWORD_VERTI_HEIGHT, WHITE, ALIGN_CENTER, sword_positions[player_direction][2]);
+    }
   }
   // heart background
   arduboy.fillRect(0,0,27,9,BLACK);
