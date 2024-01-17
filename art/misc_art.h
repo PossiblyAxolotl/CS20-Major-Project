@@ -20,9 +20,15 @@ const uint8_t PROGMEM sword_horizontal[] = {
 0x04, 0x04, 0x1f, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x04, 
 };
 
-const unsigned char* sword_frames[2] = {
+const uint8_t PROGMEM sword_down[] = {
+0x04, 0xfc, 0x07, 0xfc, 0x04, 
+0x00, 0x01, 0x02, 0x01, 0x00, 
+};
+
+const unsigned char* sword_frames[3] = {
     sword_vertical,
-    sword_horizontal
+    sword_horizontal,
+    sword_down
 };
 
 const uint8_t PROGMEM title_test[] = { // 128x64, screen size

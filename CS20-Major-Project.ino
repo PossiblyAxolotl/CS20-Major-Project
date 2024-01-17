@@ -32,6 +32,8 @@ ArdBitmap<WIDTH, HEIGHT> ardbitmap;
 #define PLAYER_MIN_Y 10
 #define PLAYER_MAX_Y 56
 
+#define SWORD_HITBOX 10
+
 // enemy spawns
 #define ENEMY_SPAWN_MIN_X 20
 #define ENEMY_SPAWN_MIN_Y 20
@@ -48,6 +50,8 @@ ArdBitmap<WIDTH, HEIGHT> ardbitmap;
 float player_x = WIDTH/2;
 float player_y = HEIGHT/2;
 int player_health = 2;
+
+int player_invincibility_frames = 0;
 
 // player animation variables
 int player_frame = 0;
@@ -68,10 +72,10 @@ const int player_directions[3][3] = {
 };
 
 const int sword_positions[4][3] = { // x, y, mirror
-  {1,1, MIRROR_VERTICAL}, // down
-  {-6,0, MIRROR_HORIZONTAL}, // left
-  {1,1, MIRROR_NONE}, // up
-  {6,0, MIRROR_NONE}  // right
+  {0,10, MIRROR_NONE}, // down
+  {-9,1, MIRROR_HORIZONTAL}, // left
+  {0,-10, MIRROR_NONE}, // up
+  {9,1, MIRROR_NONE}  // right
 };
 
 /// define enemy classes
@@ -95,7 +99,6 @@ class Skeleton : private Enemy {
   private:
     void setup() {
       wait_time = random(10,50);
-      Serial.println("setup");
     }
   public:
     Skeleton() {
@@ -109,7 +112,8 @@ class Skeleton : private Enemy {
         wait_time --;
 
         if (wait_time < 0) {
-          wait_time = SKELE_WAIT_TIME;
+          wait_time = SKELE_WAIT_TIME - game_level;
+          wait_time = max(wait_time, 10);
 
           // animate skeleton
           frame ++;
@@ -133,6 +137,22 @@ class Skeleton : private Enemy {
             y -= SKELE_MOVE_SPEED;
           }
         }
+
+        int skele_topleft[2]  = {x - SKELE_SPRITE_WIDTH / 2, y - SKELE_SPRITE_HEIGHT / 2};
+        int skele_botright[2] = {x + SKELE_SPRITE_WIDTH / 2, y + SKELE_SPRITE_HEIGHT / 2};
+
+        if (player_sword_time > 0) { // player is attacking
+          int sword_topleft[2]  = {player_x - sword_positions[player_direction][0] - SWORD_HITBOX, player_x - sword_positions[player_direction][1] - SWORD_HITBOX};
+          int sword_botright[2] = {player_x - sword_positions[player_direction][0] + SWORD_HITBOX, player_x - sword_positions[player_direction][1] + SWORD_HITBOX};
+
+          // check log/images/collisiontest.png
+        } else if (player_invincibility_frames <= 0) { // player can't get hurt if attacking, otherwise do:
+          int player_topleft[2]  = {player_x - PLAYER_SPRITE_WIDTH/2, player_y - PLAYER_SPRITE_HEIGHT/2};
+          int player_botright[2] = {player_x + PLAYER_SPRITE_WIDTH/2, player_y + PLAYER_SPRITE_HEIGHT/2};
+
+          // check log/images/collisiontest.png
+        }
+
       } else {
         // draw pile of bones in spot
       }
@@ -252,11 +272,15 @@ if (arduboy.nextFrame()) {
 
     // check if player tries to attack
     if (arduboy.pressed(A_BUTTON)) {
-      player_sword_time = 60;
+      player_sword_time = 20;
     }
     
   } else { // if you are attacking
     player_sword_time--;
+  }
+
+  if (player_invincibility_frames > 0) {
+    player_invincibility_frames --;
   }
 
   clampPlayerToBounds();
@@ -267,7 +291,7 @@ if (arduboy.nextFrame()) {
   // draw back wall first since player can overlap
   drawRoomWall();
 
-// draw player
+  // draw player
   sprites.drawOverwrite(player_x - PLAYER_SPRITE_WIDTH/2, player_y - PLAYER_SPRITE_HEIGHT/2, player_frames[player_direction], player_frame);
 
   // draw room outline
@@ -282,8 +306,10 @@ if (arduboy.nextFrame()) {
   if (player_sword_time > 0) {
     if (player_direction == 1 || player_direction == 3) { // left right
       ardbitmap.drawBitmap(player_x+sword_positions[player_direction][0], player_y+sword_positions[player_direction][1], sword_frames[1], SWORD_HORI_WIDTH, SWORD_HORI_HEIGHT, WHITE, ALIGN_CENTER, sword_positions[player_direction][2]);
-    } else { // up down
-      ardbitmap.drawBitmap(player_x+sword_positions[player_direction][0], player_y+sword_positions[player_direction][1], sword_frames[0], SWORD_VERTI_WIDTH, SWORD_VERTI_HEIGHT, WHITE, ALIGN_CENTER, sword_positions[player_direction][2]);
+    } else if (player_direction == 0) { // up down
+      ardbitmap.drawBitmap(player_x+sword_positions[player_direction][0], player_y+sword_positions[player_direction][1], sword_frames[2], SWORD_VERTI_WIDTH, SWORD_VERTI_HEIGHT, WHITE, ALIGN_CENTER, MIRROR_NONE);
+    } else {
+      ardbitmap.drawBitmap(player_x+sword_positions[player_direction][0], player_y+sword_positions[player_direction][1], sword_frames[0], SWORD_VERTI_WIDTH, SWORD_VERTI_HEIGHT, WHITE, ALIGN_CENTER, MIRROR_NONE);
     }
   }
   // heart background
