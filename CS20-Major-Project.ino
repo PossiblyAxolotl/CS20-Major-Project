@@ -53,6 +53,10 @@ int player_health = 2;
 
 int player_invincibility_frames = 0;
 
+// skele stuff
+int number_of_skeletons = 3;
+float skeleton_health = 1.0f;
+
 // player animation variables
 int player_frame = 0;
 int player_direction = 0;
@@ -145,17 +149,27 @@ class Skeleton : private Enemy {
           int sword_topleft[2]  = {player_x - sword_positions[player_direction][0] - SWORD_HITBOX, player_x - sword_positions[player_direction][1] - SWORD_HITBOX};
           int sword_botright[2] = {player_x - sword_positions[player_direction][0] + SWORD_HITBOX, player_x - sword_positions[player_direction][1] + SWORD_HITBOX};
 
-          // check log/images/collisiontest.png
+          // detect if rects overlap
+          if ((skele_topleft[1] < sword_botright[1]) && (skele_topleft[1] < sword_botright[1])) {
+            if ((skele_botright[0] > sword_topleft[0]) && (skele_botright[0] < sword_topleft[0])) {
+              alive = false;
+              number_of_skeletons--;
+            }
+          }
+
         } else if (player_invincibility_frames <= 0) { // player can't get hurt if attacking, otherwise do:
           int player_topleft[2]  = {player_x - PLAYER_SPRITE_WIDTH/2, player_y - PLAYER_SPRITE_HEIGHT/2};
           int player_botright[2] = {player_x + PLAYER_SPRITE_WIDTH/2, player_y + PLAYER_SPRITE_HEIGHT/2};
 
-          // check log/images/collisiontest.png
+          // detect if rects overlap
+          if ((skele_topleft[1] < player_botright[1]) && (skele_topleft[1] < player_botright[1])) {
+            if ((skele_botright[0] > player_topleft[0]) && (skele_botright[0] < player_topleft[0])) {
+              player_health--;
+              player_invincibility_frames = 60;
+            }
+          }
         }
-
-      } else {
-        // draw pile of bones in spot
-      }
+      } 
     }
 };
 
@@ -169,6 +183,21 @@ class Trapdoor {
 
     void draw() {
       arduboy.drawBitmap(x, y, trapdoor_frames[(int)closed], TRAPDOOR_SPRITE_WIDTH, TRAPDOOR_SPRITE_HEIGHT);
+
+      if (!closed) {
+        int door_topleft[2]  = {x - TRAPDOOR_SPRITE_WIDTH / 2, y - TRAPDOOR_SPRITE_HEIGHT / 2};
+        int door_botright[2] = {x + TRAPDOOR_SPRITE_WIDTH / 2, y + TRAPDOOR_SPRITE_HEIGHT / 2};
+
+        int player_topleft[2]  = {player_x - PLAYER_SPRITE_WIDTH/2, player_y - PLAYER_SPRITE_HEIGHT/2};
+        int player_botright[2] = {player_x + PLAYER_SPRITE_WIDTH/2, player_y + PLAYER_SPRITE_HEIGHT/2};
+
+        // detect if rects overlap
+        if ((door_topleft[1] < player_botright[1]) && (door_topleft[1] < player_botright[1])) {
+          if ((door_botright[0] > player_topleft[0]) && (door_botright[0] < player_topleft[0])) {
+            reset();
+          }
+        }
+      }
     }
 
     void reset() {
@@ -182,6 +211,27 @@ class Trapdoor {
 Skeleton* skeletons;
 
 Trapdoor trapdoor;
+
+// set up next level (trapdoor does automatically)
+void nextLevel() {
+  delete[] skeletons;
+
+  game_level++;
+
+  // SET NUM BASED ON LEVEL
+  number_of_skeletons = 1;
+  skeleton_health += 0.2;
+
+  skeletons = new Skeleton[number_of_skeletons];
+  state = 2;
+  transition_offset = 128;
+}
+
+// die 
+void clearAll() {
+  delete[] skeletons;
+  state = 0;
+}
 
 // set up game, run once
 void setup() {
@@ -347,6 +397,8 @@ if (arduboy.nextFrame()) {
     transition_offset -= 1;
   } else {
     state = 1;
+
+    nextLevel();
   }
 
   arduboy.display();
@@ -354,7 +406,7 @@ if (arduboy.nextFrame()) {
 
 }
 
-void resetGame() {
+void initialStartGame() {
   player_health = 3;
   game_level = 0;
 
@@ -364,7 +416,7 @@ void resetGame() {
 void processMenu() {
   // start game on button press
   if (arduboy.anyPressed(A_BUTTON | B_BUTTON)) {
-    resetGame();
+    initialStartGame();
     state = 2;
   }
 
