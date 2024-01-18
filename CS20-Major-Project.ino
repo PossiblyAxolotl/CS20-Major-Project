@@ -3,8 +3,15 @@
 // CS20 Final Project - Arcadey Dungeon Game            //
 //                                                      \\
 // started Oct 24, 2023                                 //
-// Last modified Jan 12, 2023                           \\
+// Last modified Jan 17, 2023                           \\
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//
+
+//// todo
+// [ ] make dynamic level thing
+// [ ] death
+// [ ] track scores until shutoff
+// [ ] proper title screen and title
+// [ ] upload finished build to github pages and add instructions
 
 #include <Arduboy2.h>
 #include <Sprites.h>
@@ -32,7 +39,9 @@ ArdBitmap<WIDTH, HEIGHT> ardbitmap;
 #define PLAYER_MIN_Y 10
 #define PLAYER_MAX_Y 56
 
+// hitboxes
 #define SWORD_HITBOX 10
+#define PLAYER_HITBOX 4
 
 // enemy spawns
 #define ENEMY_SPAWN_MIN_X 20
@@ -146,24 +155,24 @@ class Skeleton : private Enemy {
         int skele_botright[2] = {x + SKELE_SPRITE_WIDTH / 2, y + SKELE_SPRITE_HEIGHT / 2};
 
         if (player_sword_time > 0) { // player is attacking
-          int sword_topleft[2]  = {player_x - sword_positions[player_direction][0] - SWORD_HITBOX, player_x - sword_positions[player_direction][1] - SWORD_HITBOX};
-          int sword_botright[2] = {player_x - sword_positions[player_direction][0] + SWORD_HITBOX, player_x - sword_positions[player_direction][1] + SWORD_HITBOX};
+          int sword_topleft[2]  = {player_x + sword_positions[player_direction][0] - SWORD_HITBOX, player_y + sword_positions[player_direction][1] - SWORD_HITBOX};
+          int sword_botright[2] = {player_x + sword_positions[player_direction][0] + SWORD_HITBOX, player_y + sword_positions[player_direction][1] + SWORD_HITBOX};
 
           // detect if rects overlap
-          if ((skele_topleft[1] < sword_botright[1]) && (skele_topleft[1] < sword_botright[1])) {
-            if ((skele_botright[0] > sword_topleft[0]) && (skele_botright[0] < sword_topleft[0])) {
+          if ((skele_topleft[1] < sword_botright[1]) && (skele_topleft[0] < sword_botright[0])) {
+            if ((skele_botright[1] > sword_topleft[1]) && (skele_botright[0] > sword_topleft[0])) {
               alive = false;
               number_of_skeletons--;
             }
           }
 
         } else if (player_invincibility_frames <= 0) { // player can't get hurt if attacking, otherwise do:
-          int player_topleft[2]  = {player_x - PLAYER_SPRITE_WIDTH/2, player_y - PLAYER_SPRITE_HEIGHT/2};
-          int player_botright[2] = {player_x + PLAYER_SPRITE_WIDTH/2, player_y + PLAYER_SPRITE_HEIGHT/2};
+          int player_topleft[2]  = {player_x - PLAYER_HITBOX/2, player_y - PLAYER_HITBOX/2};
+          int player_botright[2] = {player_x + PLAYER_HITBOX/2, player_y + PLAYER_HITBOX/2};
 
           // detect if rects overlap
-          if ((skele_topleft[1] < player_botright[1]) && (skele_topleft[1] < player_botright[1])) {
-            if ((skele_botright[0] > player_topleft[0]) && (skele_botright[0] < player_topleft[0])) {
+          if ((skele_topleft[1] < player_botright[1]) && (skele_topleft[0] < player_botright[0])) {
+            if ((skele_botright[1] > player_topleft[1]) && (skele_botright[0] > player_topleft[0])) {
               player_health--;
               player_invincibility_frames = 60;
             }
@@ -179,21 +188,21 @@ class Trapdoor {
     int y = random(ENEMY_SPAWN_MIN_Y, ENEMY_SPAWN_MAX_Y);
 
   public:
-    bool closed = true;
-
     void draw() {
-      arduboy.drawBitmap(x, y, trapdoor_frames[(int)closed], TRAPDOOR_SPRITE_WIDTH, TRAPDOOR_SPRITE_HEIGHT);
+      arduboy.drawBitmap(x, y, trapdoor_frames[(int)(number_of_skeletons > 0)], TRAPDOOR_SPRITE_WIDTH, TRAPDOOR_SPRITE_HEIGHT);
 
-      if (!closed) {
-        int door_topleft[2]  = {x - TRAPDOOR_SPRITE_WIDTH / 2, y - TRAPDOOR_SPRITE_HEIGHT / 2};
-        int door_botright[2] = {x + TRAPDOOR_SPRITE_WIDTH / 2, y + TRAPDOOR_SPRITE_HEIGHT / 2};
+      if (number_of_skeletons < 1) {
+        int door_topleft[2]  = {x, y};
+        int door_botright[2] = {x + TRAPDOOR_SPRITE_WIDTH, y + TRAPDOOR_SPRITE_HEIGHT};
 
         int player_topleft[2]  = {player_x - PLAYER_SPRITE_WIDTH/2, player_y - PLAYER_SPRITE_HEIGHT/2};
         int player_botright[2] = {player_x + PLAYER_SPRITE_WIDTH/2, player_y + PLAYER_SPRITE_HEIGHT/2};
 
         // detect if rects overlap
-        if ((door_topleft[1] < player_botright[1]) && (door_topleft[1] < player_botright[1])) {
-          if ((door_botright[0] > player_topleft[0]) && (door_botright[0] < player_topleft[0])) {
+        if ((door_topleft[1] < player_botright[1]) && (door_topleft[0] < player_botright[0])) {
+          if ((door_botright[1] > player_topleft[1]) && (door_botright[0] > player_topleft[0])) { // if player is on open door
+            state = 2;
+            transition_offset = 128;
             reset();
           }
         }
@@ -203,7 +212,6 @@ class Trapdoor {
     void reset() {
       x = random(ENEMY_SPAWN_MIN_X, ENEMY_SPAWN_MAX_X);
       y = random(ENEMY_SPAWN_MIN_Y, ENEMY_SPAWN_MAX_Y);
-      closed = true;
     }
 };
 
@@ -223,8 +231,8 @@ void nextLevel() {
   skeleton_health += 0.2;
 
   skeletons = new Skeleton[number_of_skeletons];
-  state = 2;
-  transition_offset = 128;
+
+  player_invincibility_frames = 60;
 }
 
 // die 
@@ -236,8 +244,6 @@ void clearAll() {
 // set up game, run once
 void setup() {
   randomSeed(analogRead(0)); // randomize the game on arduboy, since computers don't have pins it's always the same
-
-  skeletons = new Skeleton[number_of_skeletons];
 
   Serial.begin(9600);
 
