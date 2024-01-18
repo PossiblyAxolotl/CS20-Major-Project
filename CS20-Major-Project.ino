@@ -11,6 +11,7 @@
 // [ ] death
 // [ ] track scores until shutoff
 // [ ] proper title screen and title
+// [ ] IF TIME add particles and fancier effects
 // [ ] upload finished build to github pages and add instructions
 
 #include <Arduboy2.h>
