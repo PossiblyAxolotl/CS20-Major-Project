@@ -3,16 +3,20 @@
 // CS20 Final Project - Arcadey Dungeon Game            //
 //                                                      \\
 // started Oct 24, 2023                                 //
-// Last modified Jan 17, 2024                          \\
+// Last modified Jan 18, 2024                          \\
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//
 
 //// todo
 // [ ] make dynamic level thing
 // [ ] death
-// [ ] track scores until shutoff
 // [ ] proper title screen and title
+
+// [ ] IF TIME track scores until shutoff
 // [ ] IF TIME add particles and fancier effects
-// [ ] upload finished build to github pages and add instructions
+
+// [X] add instructions
+// [ ] upload finished build to github pages
+// [ ] submit to Mr. Schellenberg
 
 #include <Arduboy2.h>
 #include <Sprites.h>
@@ -242,6 +246,10 @@ void clearAll() {
   state = 0;
 }
 
+bool inputButton() {
+  return arduboy.anyPressed(A_BUTTON | B_BUTTON);
+}
+
 // set up game, run once
 void setup() {
   randomSeed(analogRead(0)); // randomize the game on arduboy, since computers don't have pins it's always the same
@@ -328,7 +336,7 @@ if (arduboy.nextFrame()) {
     }
 
     // check if player tries to attack
-    if (arduboy.pressed(A_BUTTON)) {
+    if (inputButton()) {
       player_sword_time = 20;
     }
     
@@ -422,7 +430,7 @@ void initialStartGame() {
 
 void processMenu() {
   // start game on button press
-  if (arduboy.anyPressed(A_BUTTON | B_BUTTON)) {
+  if (inputButton()) {
     initialStartGame();
     state = 2;
   }
