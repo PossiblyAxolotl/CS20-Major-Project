@@ -1,17 +1,16 @@
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//
 // PossiblyAxolotl                                      \\
-// CS20 Final Project - Arcadey Dungeon Game            //
+// CS20 Final Project - Generic Dungeon Game            //
 //                                                      \\
 // started Oct 24, 2023                                 //
-// Last modified Jan 18, 2024                          \\
+// Last modified Jan 18, 2024                           \\
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//
 
 //// todo
 // [ ] make dynamic level thing
-// [ ] death
-// [ ] proper title screen and title
+// [X] death
+// [X] proper title screen and title
 
-// [ ] IF TIME track scores until shutoff
 // [ ] IF TIME add particles and fancier effects
 
 // [X] add instructions
@@ -82,6 +81,9 @@ int state = 0; // 0 = title, 1 = game, 2 = transition
 int transition_offset = 128;
 
 int game_level = 0;
+
+// declared now, defined after certain vars are created
+void clearAll();
 
 const int player_directions[3][3] = { 
   {2,2,2},
@@ -180,6 +182,10 @@ class Skeleton : private Enemy {
             if ((skele_botright[1] > player_topleft[1]) && (skele_botright[0] > player_topleft[0])) {
               player_health--;
               player_invincibility_frames = 60;
+
+              if (player_health < 0) {
+                clearAll();
+              }
             }
           }
         }
@@ -439,7 +445,7 @@ void processMenu() {
   arduboy.clear();
   
   // draw title
-  arduboy.drawBitmap(0,0,title_test,128,64);
+  arduboy.drawBitmap(0,0,title_logo,128,64);
 
   // update screen
   arduboy.display();
