@@ -3,7 +3,7 @@
 // CS20 Final Project - Generic Dungeon Game            //
 //                                                      \\
 // started Oct 24, 2023                                 //
-// Last modified Jan 18, 2024                           \\
+// Last modified Jan 19, 2024                           \\
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//
 
 //// todo
@@ -11,9 +11,9 @@
 // [X] death
 // [X] proper title screen and title
 // [X] work with multiple skeles properly
-// [ ] draw pile of bones where skele died
-// [ ] shorten sword out time a bit
+// [X] shorten sword out time a bit
 
+// [ ] IF TIME draw pile of bones where skele died
 // [ ] IF TIME add particles and fancier effects
 
 // [X] add instructions
@@ -353,7 +353,7 @@ if (arduboy.nextFrame()) {
 
     // check if player tries to attack
     if (inputButton()) {
-      player_sword_time = 20;
+      player_sword_time = 10;
     }
     
   } else { // if you are attacking
