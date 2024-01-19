@@ -12,6 +12,7 @@
 // [X] proper title screen and title
 // [X] work with multiple skeles properly
 // [ ] draw pile of bones where skele died
+// [ ] shorten sword out time a bit
 
 // [ ] IF TIME add particles and fancier effects
 
