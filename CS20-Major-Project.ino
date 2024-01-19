@@ -13,8 +13,8 @@
 // [X] work with multiple skeles properly
 // [X] shorten sword out time a bit
 
-// [ ] IF TIME draw pile of bones where skele died
-// [ ] IF TIME add particles and fancier effects
+// [X] IF TIME draw pile of bones where skele died
+// [ ] IF TIME add particles
 
 // [X] add instructions
 // [ ] create overview and other info for log
@@ -194,7 +194,9 @@ class Skeleton : private Enemy {
             }
           }
         }
-      } 
+      } else {
+        ardbitmap.drawBitmap(x, y, dead_skele, SKELE_SPRITE_WIDTH, SKELE_SPRITE_HEIGHT, WHITE, ALIGN_CENTER, mirror);
+      }
     }
 };
 
@@ -353,7 +355,7 @@ if (arduboy.nextFrame()) {
 
     // check if player tries to attack
     if (inputButton()) {
-      player_sword_time = 10;
+      player_sword_time = 15;
     }
     
   } else { // if you are attacking
