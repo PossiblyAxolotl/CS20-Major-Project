@@ -24,8 +24,13 @@ a, details {
     color:gray;
 }
 
-a:hover, details:hover {
+a:hover {
     color: lightgray;
+}
+
+details:hover {
+    color: lightgray;
+    cursor: pointer;
 }
 
 a:active {

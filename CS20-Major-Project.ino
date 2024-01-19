@@ -7,9 +7,11 @@
 //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//\\//
 
 //// todo
-// [ ] make dynamic level thing
+// [X] make dynamic level thing
 // [X] death
 // [X] proper title screen and title
+// [X] work with multiple skeles properly
+// [ ] draw pile of bones where skele died
 
 // [ ] IF TIME add particles and fancier effects
 
@@ -44,7 +46,7 @@ ArdBitmap<WIDTH, HEIGHT> ardbitmap;
 #define PLAYER_MAX_Y 56
 
 // hitboxes
-#define SWORD_HITBOX 10
+#define SWORD_HITBOX 6
 #define PLAYER_HITBOX 4
 
 // enemy spawns
@@ -59,6 +61,8 @@ ArdBitmap<WIDTH, HEIGHT> ardbitmap;
 #define SKELE_WAIT_TIME 30
 #define SKELE_MOVE_SPEED 2
 
+#define SKELE_MAX_AMOUNT 5
+
 // define variables
 float player_x = WIDTH/2;
 float player_y = HEIGHT/2;
@@ -67,8 +71,8 @@ int player_health = 2;
 int player_invincibility_frames = 0;
 
 // skele stuff
-int number_of_skeletons = 3;
-float skeleton_health = 1.0f;
+int number_of_skeletons = 1;
+int skeletons_left = 1;
 
 // player animation variables
 int player_frame = 0;
@@ -80,7 +84,7 @@ int player_anim_timer = PLAYER_ANIM_WAIT_TIME;
 int state = 0; // 0 = title, 1 = game, 2 = transition
 int transition_offset = 128;
 
-int game_level = 0;
+int game_level = 1;
 
 // declared now, defined after certain vars are created
 void clearAll();
@@ -110,8 +114,6 @@ class Enemy {
     int mirror = MIRROR_NONE;
 
     bool alive = true;
-
-    // wait for wait time, move by move speed until total distance travelled >= move_distance
 };
 
 // skeleton
@@ -168,8 +170,9 @@ class Skeleton : private Enemy {
           // detect if rects overlap
           if ((skele_topleft[1] < sword_botright[1]) && (skele_topleft[0] < sword_botright[0])) {
             if ((skele_botright[1] > sword_topleft[1]) && (skele_botright[0] > sword_topleft[0])) {
+              player_sword_time = 0;
               alive = false;
-              number_of_skeletons--;
+              skeletons_left --;
             }
           }
 
@@ -181,9 +184,9 @@ class Skeleton : private Enemy {
           if ((skele_topleft[1] < player_botright[1]) && (skele_topleft[0] < player_botright[0])) {
             if ((skele_botright[1] > player_topleft[1]) && (skele_botright[0] > player_topleft[0])) {
               player_health--;
-              player_invincibility_frames = 60;
+              player_invincibility_frames = 30;
 
-              if (player_health < 0) {
+              if (player_health < 1) {
                 clearAll();
               }
             }
@@ -200,9 +203,9 @@ class Trapdoor {
 
   public:
     void draw() {
-      arduboy.drawBitmap(x, y, trapdoor_frames[(int)(number_of_skeletons > 0)], TRAPDOOR_SPRITE_WIDTH, TRAPDOOR_SPRITE_HEIGHT);
+      arduboy.drawBitmap(x, y, trapdoor_frames[(int)(skeletons_left > 0)], TRAPDOOR_SPRITE_WIDTH, TRAPDOOR_SPRITE_HEIGHT);
 
-      if (number_of_skeletons < 1) {
+      if (skeletons_left < 1) {
         int door_topleft[2]  = {x, y};
         int door_botright[2] = {x + TRAPDOOR_SPRITE_WIDTH, y + TRAPDOOR_SPRITE_HEIGHT};
 
@@ -238,12 +241,17 @@ void nextLevel() {
   game_level++;
 
   // SET NUM BASED ON LEVEL
-  number_of_skeletons = 1;
-  skeleton_health += 0.2;
+  number_of_skeletons = ceil(game_level / 4 + 0.1);
+  if (number_of_skeletons > SKELE_MAX_AMOUNT) {
+    number_of_skeletons = SKELE_MAX_AMOUNT;
+  }
+
+  skeletons_left = number_of_skeletons;
 
   skeletons = new Skeleton[number_of_skeletons];
 
   player_invincibility_frames = 60;
+  player_sword_time = 0;
 }
 
 // die 
@@ -258,7 +266,7 @@ bool inputButton() {
 
 // set up game, run once
 void setup() {
-  randomSeed(analogRead(0)); // randomize the game on arduboy, since computers don't have pins it's always the same
+  randomSeed(analogRead(A0)); // randomize the game on arduboy, since computers don't have pins it's always the same
 
   Serial.begin(9600);
 
@@ -372,7 +380,7 @@ if (arduboy.nextFrame()) {
   for (int i = 0; i < number_of_skeletons; i++) {
     skeletons[i].update(player_x, player_y);
   }
-  
+
   // sword
   if (player_sword_time > 0) {
     if (player_direction == 1 || player_direction == 3) { // left right
@@ -429,7 +437,7 @@ if (arduboy.nextFrame()) {
 
 void initialStartGame() {
   player_health = 3;
-  game_level = 0;
+  game_level = 1;
 
   transition_offset = 128;
 }
