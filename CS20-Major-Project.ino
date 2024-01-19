@@ -16,6 +16,7 @@
 // [ ] IF TIME add particles and fancier effects
 
 // [X] add instructions
+// [ ] create overview and other info for log
 // [ ] upload finished build to github pages
 // [ ] submit to Mr. Schellenberg
 
