@@ -12,14 +12,13 @@
 // [X] proper title screen and title
 // [X] work with multiple skeles properly
 // [X] shorten sword out time a bit
-
-// [X] IF TIME draw pile of bones where skele died
-// [ ] IF TIME add particles
+// [X] add sword recharge
+// [X] draw pile of bones where skele died
 
 // [X] add instructions
-// [ ] create overview and other info for log
-// [ ] upload finished build to github pages
-// [ ] submit to Mr. Schellenberg
+// [X] create overview and other info for log
+// [X] upload finished build to github pages
+// [X] submit to Mr. Schellenberg
 
 #include <Arduboy2.h>
 #include <Sprites.h>
@@ -75,11 +74,13 @@ int player_invincibility_frames = 0;
 // skele stuff
 int number_of_skeletons = 1;
 int skeletons_left = 1;
+float skele_health = 1.0f;
 
 // player animation variables
 int player_frame = 0;
 int player_direction = 0;
 int player_sword_time = 0;
+int player_sword_recharge = 0;
 int player_anim_timer = PLAYER_ANIM_WAIT_TIME;
 
 //misc game variables
@@ -177,7 +178,6 @@ class Skeleton : private Enemy {
               skeletons_left --;
             }
           }
-
         } else if (player_invincibility_frames <= 0) { // player can't get hurt if attacking, otherwise do:
           int player_topleft[2]  = {player_x - PLAYER_HITBOX/2, player_y - PLAYER_HITBOX/2};
           int player_botright[2] = {player_x + PLAYER_HITBOX/2, player_y + PLAYER_HITBOX/2};
@@ -256,6 +256,7 @@ void nextLevel() {
 
   player_invincibility_frames = 60;
   player_sword_time = 0;
+  player_sword_recharge = 30;
 }
 
 // die 
@@ -354,8 +355,13 @@ if (arduboy.nextFrame()) {
     }
 
     // check if player tries to attack
-    if (inputButton()) {
-      player_sword_time = 15;
+    if (player_sword_recharge <= 0) {
+      if (inputButton()) {
+        player_sword_time = 15;
+        player_sword_recharge = 30;
+      }
+    } else {
+      player_sword_recharge--;
     }
     
   } else { // if you are attacking
