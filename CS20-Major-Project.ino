@@ -173,7 +173,6 @@ class Skeleton : private Enemy {
           // detect if rects overlap
           if ((skele_topleft[1] < sword_botright[1]) && (skele_topleft[0] < sword_botright[0])) {
             if ((skele_botright[1] > sword_topleft[1]) && (skele_botright[0] > sword_topleft[0])) {
-              player_sword_time = 0;
               alive = false;
               skeletons_left --;
             }
